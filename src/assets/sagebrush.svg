@@ -1,0 +1,18 @@
+<svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sagebrush sprig">
+  <g stroke="#5C7144" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M60 138 L60 56"></path>
+    <path d="M60 110 C44 104 36 90 36 74"></path>
+    <path d="M60 110 C76 104 84 90 84 74"></path>
+    <path d="M60 86 C48 80 42 68 42 54"></path>
+    <path d="M60 86 C72 80 78 68 78 54"></path>
+    <path d="M60 64 C52 58 48 46 48 34"></path>
+    <path d="M60 64 C68 58 72 46 72 34"></path>
+    <path d="M60 50 L60 30"></path>
+  </g>
+  <g fill="#8AA06F">
+    <circle cx="36" cy="72" r="6"></circle><circle cx="84" cy="72" r="6"></circle>
+    <circle cx="42" cy="52" r="6"></circle><circle cx="78" cy="52" r="6"></circle>
+    <circle cx="48" cy="32" r="5.5"></circle><circle cx="72" cy="32" r="5.5"></circle>
+    <circle cx="60" cy="28" r="6"></circle>
+  </g>
+</svg>

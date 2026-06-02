@@ -1,0 +1,15 @@
+<svg width="160" height="96" viewBox="0 0 160 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bicycle">
+  <g stroke="#3A332A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="36" cy="64" r="24"></circle>
+    <circle cx="124" cy="64" r="24"></circle>
+    
+    <path d="M36 64 L66 64 L92 28 L112 64"></path>
+    <path d="M66 64 L88 64"></path>
+    <path d="M92 28 L124 64"></path>
+    <path d="M92 28 L80 28"></path>
+    
+    <path d="M66 64 L60 40 L52 40"></path>
+    <path d="M80 28 L86 22"></path>
+  </g>
+  <circle cx="66" cy="64" r="4" fill="#CC7B52"></circle>
+</svg>

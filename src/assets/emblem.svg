@@ -1,0 +1,31 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sagebrush Cycle emblem">
+  
+  <circle cx="120" cy="120" r="116" fill="#F6EEE1" stroke="#748B58" stroke-width="8"></circle>
+  <circle cx="120" cy="120" r="100" fill="none" stroke="#C7D4B2" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"></circle>
+  
+  <clipPath id="scene"><circle cx="120" cy="120" r="92"></circle></clipPath>
+  <g clip-path="url(#scene)">
+    <rect x="28" y="28" width="184" height="184" fill="#EAF1DE"></rect>
+    
+    <circle cx="120" cy="104" r="34" fill="#F0C868"></circle>
+    <g stroke="#E8B65A" stroke-width="5" stroke-linecap="round">
+      <line x1="120" y1="44" x2="120" y2="54"></line>
+      <line x1="84" y1="68" x2="91" y2="75"></line>
+      <line x1="156" y1="68" x2="149" y2="75"></line>
+      <line x1="68" y1="104" x2="78" y2="104"></line>
+      <line x1="172" y1="104" x2="162" y2="104"></line>
+    </g>
+    
+    <path d="M28 150 L52 150 L60 132 L96 132 L104 150 L212 150 L212 212 L28 212 Z" fill="#CC7B52"></path>
+    <path d="M28 168 L72 168 L84 156 L140 156 L154 168 L212 168 L212 212 L28 212 Z" fill="#B5613B"></path>
+    
+    <rect x="28" y="186" width="184" height="26" fill="#5C7144"></rect>
+    
+    <g stroke="#43542F" stroke-width="3.5" stroke-linecap="round">
+      <line x1="56" y1="196" x2="56" y2="182"></line><line x1="56" y1="188" x2="50" y2="180"></line><line x1="56" y1="188" x2="62" y2="180"></line>
+      <line x1="186" y1="196" x2="186" y2="182"></line><line x1="186" y1="188" x2="180" y2="180"></line><line x1="186" y1="188" x2="192" y2="180"></line>
+    </g>
+  </g>
+  
+  <circle cx="120" cy="120" r="92" fill="none" stroke="#748B58" stroke-width="4"></circle>
+</svg>

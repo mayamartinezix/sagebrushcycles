@@ -1,0 +1,227 @@
+/* ============================================================
+   SAGEBRUSH CYCLE — Foundations
+   Bike rentals on the Weiser Trail. High-desert, cute & friendly.
+   Warm sand + sage green, soft rounded shapes, sunny clay accents.
+   ============================================================ */
+
+/* ---------- Nunito Sans — self-hosted from uploaded variable fonts ---------- */
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('fonts/NunitoSans-VariableFont_YTLC_opsz_wdth_wght.ttf') format('truetype');
+  font-weight: 400 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('fonts/NunitoSans-Italic-VariableFont_YTLC_opsz_wdth_wght.ttf') format('truetype');
+  font-weight: 400 700; font-style: italic; font-display: swap;
+}
+
+/* ---------- Baloo 2 — self-hosted from uploaded files ---------- */
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('fonts/Baloo2-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('fonts/Baloo2-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('fonts/Baloo2-SemiBold.ttf') format('truetype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('fonts/Baloo2-Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('fonts/Baloo2-ExtraBold.ttf') format('truetype');
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* ---------- BRAND PALETTE ---------- */
+  /* Warm sands / paper */
+  --sand-50:  #FCF8F0;   /* lightest surface */
+  --sand-100: #F6EEE1;   /* page background */
+  --sand-200: #EEE2CD;   /* sunk surface / hairlines on sand */
+  --sand-300: #E2D0B3;   /* dune */
+
+  /* Sage greens (primary) */
+  --sage-100: #E4EBD8;   /* soft tint / chips */
+  --sage-200: #C7D4B2;   /* light fills */
+  --sage-400: #8AA06F;   /* sage */
+  --sage-500: #748B58;   /* primary */
+  --sage-600: #5C7144;   /* primary pressed / deep */
+  --sage-700: #43542F;   /* darkest foliage */
+
+  /* Clay / terracotta (accent) */
+  --clay-100: #F6DDCD;
+  --clay-300: #E5A87F;
+  --clay-500: #CC7B52;   /* accent */
+  --clay-600: #B5613B;   /* accent pressed */
+
+  /* Sky (secondary accent) */
+  --sky-200:  #CFE0E0;
+  --sky-400:  #8FB0B3;
+  --sky-600:  #5E8589;
+
+  /* Sun (highlight) */
+  --sun-400:  #F0C868;
+  --sun-500:  #E8B65A;
+
+  /* Warm ink */
+  --ink:      #3A332A;   /* primary text */
+  --ink-soft: #6E6456;   /* secondary text */
+  --ink-faint:#9A8E7C;   /* tertiary / placeholder */
+
+  /* ---------- SEMANTIC COLOR ---------- */
+  --bg:            var(--sand-100);
+  --bg-elevated:   var(--sand-50);
+  --bg-sunk:       var(--sand-200);
+  --surface:       #FFFFFF;
+  --border:        #E3D6BF;
+  --border-strong: #D2C09F;
+
+  --fg1: var(--ink);        /* headings, primary copy */
+  --fg2: var(--ink-soft);   /* supporting copy */
+  --fg3: var(--ink-faint);  /* hints, placeholders */
+  --fg-on-sage: #FBF8F0;
+  --fg-on-clay: #FFF6EE;
+
+  --primary:        var(--sage-500);
+  --primary-hover:  var(--sage-600);
+  --primary-press:  var(--sage-700);
+  --accent:         var(--clay-500);
+  --accent-hover:   var(--clay-600);
+
+  --focus-ring: var(--sage-500);
+  --selection:  var(--sage-200);
+
+  /* ---------- TYPE FAMILIES ---------- */
+  --font-display: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  --font-body:    'Nunito Sans', 'Segoe UI', system-ui, sans-serif;
+
+  /* ---------- TYPE SCALE (mobile-first, fluid) ---------- */
+  --text-xs:   0.8125rem;  /* 13px */
+  --text-sm:   0.9375rem;  /* 15px */
+  --text-base: 1.0625rem;  /* 17px — comfy on phones */
+  --text-lg:   1.25rem;    /* 20px */
+  --text-xl:   1.5rem;     /* 24px */
+  --text-2xl:  1.9375rem;  /* 31px */
+  --text-3xl:  2.5rem;     /* 40px */
+  --text-4xl:  clamp(2.75rem, 9vw, 4rem); /* hero */
+
+  --leading-tight: 1.08;
+  --leading-snug:  1.25;
+  --leading-body:  1.55;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide:  0.06em;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---------- RADII (soft & rounded) ---------- */
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-xl:   34px;
+  --radius-pill: 999px;
+
+  /* ---------- SHADOWS (soft, warm-tinted) ---------- */
+  --shadow-sm: 0 1px 2px rgba(89, 66, 36, 0.08);
+  --shadow-md: 0 4px 14px rgba(89, 66, 36, 0.10);
+  --shadow-lg: 0 12px 32px rgba(89, 66, 36, 0.14);
+  --shadow-focus: 0 0 0 4px rgba(116, 139, 88, 0.30);
+
+  /* ---------- MOTION ---------- */
+  --ease-soft: cubic-bezier(0.34, 1.2, 0.64, 1);   /* gentle overshoot */
+  --ease-out:  cubic-bezier(0.2, 0.7, 0.3, 1);
+  --dur-fast:  140ms;
+  --dur-med:   240ms;
+}
+
+::selection { background: var(--selection); color: var(--ink); }
+
+/* ============================================================
+   SEMANTIC TYPE ROLES
+   ============================================================ */
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg1);
+}
+.t-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg1);
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg1);
+}
+.t-h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  color: var(--fg1);
+}
+.t-lead {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--fg2);
+}
+.t-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--fg1);
+}
+.t-small {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--fg2);
+}
+.t-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--clay-600);
+}
+.t-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--fg1);
+}

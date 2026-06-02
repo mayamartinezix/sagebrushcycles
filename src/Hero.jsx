@@ -1,0 +1,37 @@
+/* global React */
+
+function Hero({ onReserve }) {
+  return (
+    <section className="sb-hero" id="top">
+      <div className="sb-hero__sun" aria-hidden="true">
+        <img src={`${ASSETS}/sun.svg`} alt="" />
+      </div>
+      <p className="sb-hero__eyebrow">WE'RE WHEELY GLAD YOU'RE HERE</p>
+      <h1 className="sb-hero__title">Easygoing bike rentals,<br />right by the trail.</h1>
+      <p className="sb-hero__lead">
+        Grab a comfy bike for a half day or a full day and roll straight out onto
+        the Weiser Trail. Two wheels, zero worries — just tell us when you'd like
+        to ride and we'll have one ready to roll.
+      </p>
+      <div className="sb-hero__cta">
+        <Button variant="primary" onClick={onReserve}>Saddle up</Button>
+        <a className="sb-hero__link" href="tel:+12085550148">
+          <i data-lucide="phone"></i> Or give us a call
+        </a>
+      </div>
+
+      <div className="sb-hero__photo">
+        <span className="sb-hero__badge">Hop on!</span>
+        <image-slot
+          id="sb-hero-photo"
+          shape="rounded"
+          radius="24"
+          placeholder="Drop a golden-hour trail photo"
+        ></image-slot>
+        <img className="sb-hero__bike" src={`${ASSETS}/bike.svg`} alt="" aria-hidden="true" />
+      </div>
+    </section>
+  );
+}
+
+window.Hero = Hero;
