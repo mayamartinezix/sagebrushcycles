@@ -54,10 +54,12 @@ Local preview: `npm install && npm run preview` → http://localhost:8080.
 - **The phone number** appears in three components: `Header.jsx`, `Hero.jsx`,
   `Footer.jsx`. Prices live in the `RATES` array in `Rates.jsx`; hours/address/
   email in `Footer.jsx`.
-- **Fonts** (`src/fonts/`) are the bulk of shipped bytes (~3.8 MB). The CSS
-  references the 5 static Baloo 2 weights + 2 Nunito Sans variable fonts;
-  `Baloo2-VariableFont_wght.ttf` is **not** referenced (a candidate to drop, and
-  TTF→WOFF2 would cut ~70% — not yet done).
+- **Fonts** (`src/fonts/`) are **WOFF2**, ~944 KB total (down from ~3.8 MB of
+  TTF): the 5 static Baloo 2 weights + 2 Nunito Sans variable fonts, full (not
+  subset — so the rental-form inputs keep every glyph). The unreferenced
+  `Baloo2-VariableFont_wght.ttf` was dropped. If you add a weight, convert it the
+  same way (`fontTools.ttLib.TTFont(...).flavor='woff2'`) and keep the CSS
+  `format('woff2')`.
 
 ## Image & deploy
 
