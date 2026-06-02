@@ -72,6 +72,20 @@ js += read(path.join(SRC, "image-slot.js")) + "\n";
 
 fs.writeFileSync(path.join(OUT, "app.js"), js);
 
+// ── content.js: editable site copy as a window global ──
+// The site's words/prices/hours live in src/content.json (the one file a CMS
+// edits). We emit them as `window.SB_CONTENT` in a SEPARATE script loaded
+// BEFORE app.js, so app.js stays content-free and identical everywhere. The
+// PHP CMS variants (Grav/WonderCMS) don't ship this file — their page template
+// injects the same `window.SB_CONTENT` global from the CMS store instead, and
+// the very same app.js renders it. Components fall back to baked-in defaults if
+// the global is ever missing, so the site never renders blank.
+const content = JSON.parse(read(path.join(SRC, "content.json")));
+fs.writeFileSync(
+  path.join(OUT, "content.js"),
+  "window.SB_CONTENT = " + JSON.stringify(content) + ";\n"
+);
+
 // ── static assets ──
 for (const css of STYLES) fs.copyFileSync(path.join(SRC, css), path.join(OUT, css));
 copyDir(path.join(SRC, "assets"), path.join(OUT, "assets"));
@@ -92,6 +106,8 @@ const html = `<!doctype html>
 <body>
   <div id="root"></div>
   <!-- Generated bundle — do not edit. Built from src/ by build.mjs. -->
+  <!-- content.js sets window.SB_CONTENT (from src/content.json); app.js reads it. -->
+  <script src="content.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

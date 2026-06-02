@@ -1,6 +1,6 @@
 /* global React */
 
-const RATES = [
+const RATES_FALLBACK = [
   {
     icon: 'sun',
     name: 'Half day',
@@ -19,12 +19,14 @@ const RATES = [
 ];
 
 function Rates() {
+  const c = (window.SB_CONTENT && window.SB_CONTENT.rates) || {};
+  const items = (c.items && c.items.length) ? c.items : RATES_FALLBACK;
   return (
     <section className="sb-rates" id="rates">
-      <h2 className="sb-section__title">Rates that won't tire you out</h2>
-      <p className="sb-section__sub">Helmet, lock, and a little trail map come with every bike — that's just how we roll.</p>
+      <h2 className="sb-section__title">{c.title || "Rates that won't tire you out"}</h2>
+      <p className="sb-section__sub">{c.sub || "Helmet, lock, and a little trail map come with every bike — that's just how we roll."}</p>
       <div className="sb-rates__grid">
-        {RATES.map((r) => (
+        {items.map((r) => (
           <div className={`sb-rate${r.popular ? ' is-popular' : ''}`} key={r.name}>
             {r.popular && <span className="sb-rate__tag">The wheel deal</span>}
             <img className="sb-rate__icon" src={`${ASSETS}/${r.icon}.svg`} alt="" />
