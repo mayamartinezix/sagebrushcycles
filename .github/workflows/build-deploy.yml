@@ -21,6 +21,15 @@ name: build-deploy
 on:
   push:
     branches: [main]
+    # Only rebuild/redeploy when something that affects the image or the
+    # deploy bundle changes — skip README-only / docs commits. Use
+    # workflow_dispatch for a manual redeploy without a code change.
+    paths:
+      - "public/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "deploy/**"
+      - ".github/workflows/build-deploy.yml"
   workflow_dispatch:
 
 concurrency:
