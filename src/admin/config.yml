@@ -1,0 +1,86 @@
+# Decap CMS configuration for the Sagebrush Cycle site.
+#
+# The editor reads and writes the site's real content file (src/content.json)
+# and photo (src/assets/hero.jpg) straight into this GitHub repo. Saving a
+# change commits to the `cms/decap` branch, which triggers the build-deploy
+# workflow → the -decap staging site rebuilds with the new copy.
+#
+# Backend: GitHub. Decap's GitHub backend needs an OAuth handler to log editors
+# in (GitHub OAuth Apps don't support browser-only PKCE). `base_url` +
+# `auth_endpoint` below point at an OAuth proxy that must be stood up
+# separately — see CMS-NOTES.md. Until it exists, this page loads but "Login
+# with GitHub" cannot complete.
+backend:
+  name: github
+  repo: licenseplated/sagebrushcycles
+  branch: cms/decap
+  # OAuth proxy (e.g. an instance of vencax/netlify-cms-github-oauth-provider
+  # or sveltia-cms-auth). Replace with the deployed proxy's host.
+  base_url: https://decap-oauth.staging.tripoli.systems
+  auth_endpoint: auth
+
+# Editors commit straight to cms/decap (no PR/editorial workflow on staging).
+publish_mode: simple
+
+# Photos uploaded in the editor land in src/assets and are referenced by
+# filename, exactly how the build + <image-slot src="assets/hero.jpg"> expect.
+media_folder: src/assets
+public_folder: assets
+
+collections:
+  - name: site
+    label: Website content
+    description: The words, prices, and details shown on your site.
+    files:
+      - name: content
+        label: All site content
+        file: src/content.json
+        # One screen that edits the whole site. Each group below matches a
+        # section of the page.
+        fields:
+          - label: Business details
+            name: business
+            widget: object
+            fields:
+              - { label: Business name, name: name, widget: string }
+              - { label: Tagline (small caps under the name), name: tagline, widget: string }
+              - { label: Phone number (shown to visitors), name: phoneDisplay, widget: string }
+              - { label: Phone number (dialable, e.g. +12085550148), name: phoneHref, widget: string }
+              - { label: Email address, name: email, widget: string }
+          - label: Hero (top of the page)
+            name: hero
+            widget: object
+            fields:
+              - { label: Eyebrow (small text above the headline), name: eyebrow, widget: string }
+              - { label: Headline — line 1, name: titleLine1, widget: string }
+              - { label: Headline — line 2, name: titleLine2, widget: string }
+              - { label: Intro paragraph, name: lead, widget: text }
+              - { label: Main button text, name: ctaPrimary, widget: string }
+              - { label: Phone link text, name: ctaPhone, widget: string }
+              - { label: Photo badge text, name: badge, widget: string }
+          - label: Rates section
+            name: rates
+            widget: object
+            fields:
+              - { label: Section title, name: title, widget: string }
+              - { label: Section subtitle, name: sub, widget: text }
+              - label: Rate cards
+                name: items
+                widget: list
+                fields:
+                  - { label: "Icon (sun or bike)", name: icon, widget: select, options: ["sun", "bike"] }
+                  - { label: Name, name: name, widget: string }
+                  - { label: Price (e.g. $24), name: price, widget: string }
+                  - { label: Unit (e.g. up to 4 hours), name: unit, widget: string }
+                  - { label: Description, name: desc, widget: text }
+                  - { label: Highlight this card?, name: popular, widget: boolean, default: false }
+          - label: Footer
+            name: footer
+            widget: object
+            fields:
+              - { label: "“Find us” heading", name: findTitle, widget: string }
+              - { label: "“Find us” text", name: findBody, widget: text }
+              - { label: "“Open” heading", name: openTitle, widget: string }
+              - { label: "“Open” text", name: openBody, widget: text }
+              - { label: "“Say hi” heading", name: sayTitle, widget: string }
+              - { label: Closing note, name: note, widget: string }

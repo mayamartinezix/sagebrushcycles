@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: weeeeeiserbikes
-  namespace: weeeeeiserbikes
+  name: weeeeeiserbikes-decap
+  namespace: weeeeeiserbikes-decap
 spec:
   type: ClusterIP
   selector:
-    app: weeeeeiserbikes
+    app: weeeeeiserbikes-decap
   ports:
     - name: http
       port: 80

@@ -6,20 +6,23 @@
 # ghcr.io/licenseplated/sagebrushcycles is private; the cluster-wide
 # `ghcr-pull` Secret (rumi infrastructure/external-secrets-store/ghcr-pull.yaml,
 # fanned to every namespace from Vault kv/ghcr/pull) authenticates the pull.
+#
+# Variant: cms/decap — static nginx site + a vendored Decap CMS editor at
+# /admin. Same nginx image shape as the original; only the served files differ.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weeeeeiserbikes
-  namespace: weeeeeiserbikes
+  name: weeeeeiserbikes-decap
+  namespace: weeeeeiserbikes-decap
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weeeeeiserbikes
+      app: weeeeeiserbikes-decap
   template:
     metadata:
       labels:
-        app: weeeeeiserbikes
+        app: weeeeeiserbikes-decap
     spec:
       imagePullSecrets:
         - name: ghcr-pull

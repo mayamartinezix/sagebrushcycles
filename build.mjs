@@ -91,6 +91,13 @@ for (const css of STYLES) fs.copyFileSync(path.join(SRC, css), path.join(OUT, cs
 copyDir(path.join(SRC, "assets"), path.join(OUT, "assets"));
 copyDir(path.join(SRC, "fonts"), path.join(OUT, "fonts"));
 
+// ── /admin: the Decap CMS editor (index.html + config.yml + vendored bundle) ──
+// Present only on the cms/decap branch. Copied verbatim; it's a self-contained
+// editor page that talks to GitHub, independent of the React site bundle.
+if (fs.existsSync(path.join(SRC, "admin"))) {
+  copyDir(path.join(SRC, "admin"), path.join(OUT, "admin"));
+}
+
 // ── index.html ──
 const html = `<!doctype html>
 <html lang="en">
