@@ -22,10 +22,13 @@ function Hero({ onReserve }) {
 
       <div className="sb-hero__photo">
         <span className="sb-hero__badge">Hop on!</span>
+        {/* The hero photo. To change it, replace src/assets/hero.jpg with a new
+            photo of the same name and rebuild — see README. */}
         <image-slot
           id="sb-hero-photo"
           shape="rounded"
           radius="24"
+          src="assets/hero.jpg"
           placeholder="Drop a golden-hour trail photo"
         ></image-slot>
         <img className="sb-hero__bike" src={`${ASSETS}/bike.svg`} alt="" aria-hidden="true" />

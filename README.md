@@ -1,128 +1,132 @@
 # Sagebrush Cycle — your website
 
-This is the home of your website. The live site that customers see is:
+This is the home of your website. The live site customers see is:
 
 ### 👉 https://weeeeeiserbikes.staging.tripoli.systems
 
-When you change the file here, the live site updates by itself a minute or two
-later. You don't need to install anything or call anyone to make a normal
-update — you can do it from this web page in your browser.
+You change the website by editing the **pieces** it's made of (in the **`src`**
+folder). When you save a change, the site rebuilds itself and goes live a minute
+or two later. You don't need to install anything — you can do it all from this
+page in your web browser.
 
 ---
 
-## The one thing that IS your website
+## How your website is put together
 
-Inside the **`public`** folder there is a single file:
+Your website is **built** from a set of small source pieces — the headline, the
+prices, the photo, the footer, and so on. A behind-the-scenes robot takes those
+pieces and assembles the finished website automatically every time you make a
+change.
 
-```
-public/index.html
-```
+> **The most important rule:** edit the pieces in the **`src`** folder.
+> **Never** edit the **`public`** folder — that's the *finished, assembled*
+> website the robot produces, and anything you change there gets wiped out and
+> rebuilt on the next change. `src` = the ingredients (you edit these);
+> `public` = the baked cake (don't touch).
 
-**That file *is* your website.** Whatever it contains is what visitors see.
-To change the site, you replace that one file with a newer version, and the
-live site catches up on its own.
-
-Everything else in here is behind-the-scenes machinery. **You never need to
-touch any other folder** (`deploy`, `src`, `.github`, or the files starting
-with a dot). Leave them alone and everything keeps working.
+You also never need to touch `deploy`, `build.mjs`, `Dockerfile`, or anything
+starting with a dot. Leave them alone.
 
 ---
 
-## How to update the website (step by step)
+## What to edit for a common change
 
-You'll do this right here on the website's page in your browser
-(github.com/licenseplated/sagebrushcycles). You do **not** need any special
-software.
+| You want to change… | Edit this piece |
+|---|---|
+| The big headline & welcome text | `src/Hero.jsx` |
+| The prices (Half day / Full day) | `src/Rates.jsx` |
+| Hours, address, email | `src/Footer.jsx` |
+| The business name / "BIKE RENTALS · WEISER TRAIL" | `src/Header.jsx` |
+| The phone number | it appears in **three** files — `src/Header.jsx`, `src/Hero.jsx`, and `src/Footer.jsx` (change it in all three) |
+| The big trail photo | replace `src/assets/hero.jpg` (see "Swapping the photo" below) |
 
-### Step 1 — Get the new version of your site
+---
 
-Open your site in the design tool you used to build it, make your changes
-(new prices, new photos, new wording…), and **export / download it as a single
-web page (an `.html` file)**. Save it somewhere easy to find, like your
-Desktop. The exact button is usually called *Export*, *Download*, or
-*Save as HTML*.
+## How to make a text change (no software needed)
 
-> 💡 You want the **standalone / single-file** version — one `.html` file that
-> contains everything. If the tool gives you a folder of many files, look for
-> the "standalone" or "single file" option.
+You'll do this on this repo's page in your browser
+(github.com/licenseplated/sagebrushcycles).
 
-### Step 2 — Put the new file in place
+1. Click into the **`src`** folder, then click the file you want from the table
+   above (for example **`Rates.jsx`**).
+2. Click the **pencil ✏️ icon** near the top right ("Edit this file").
+3. Change only the **words inside the quotes**. For example, to change a price,
+   find `price: '$24'` and change it to `price: '$28'`.
+   - ⚠️ **Change the words, not the symbols around them.** Leave the quotes
+     `'…'`, brackets, and punctuation exactly as they are. If you'd like, copy
+     the original line into a note first so you can put it back.
+4. Scroll down to the green **"Commit changes"** button. Type a short note about
+   what you changed (e.g. *"Raise half-day price"*), keep **"Commit directly to
+   the main branch"** selected, and click **Commit changes**.
 
-1. On this site's page, click into the **`public`** folder.
-2. Click the file **`index.html`**.
-3. Near the top right, click the **pencil ✏️ icon** ("Edit this file").
-   - *(If editing is awkward because the file is large, use this instead:* go
-     back to the `public` folder, click **Add file → Upload files**, drag your
-     new file in, and **rename it to `index.html`** so it replaces the old one.)*
-4. Replace the old contents with your new file's contents (or upload as above).
+That's it — the robot takes over from here. ✅
 
-### Step 3 — Save it (this is called "Commit")
+### Swapping the photo
 
-1. Scroll down to the **green "Commit changes" button**.
-2. In the little message box, type what you changed, e.g.
-   *"Updated summer rental prices"* — this is just a note for yourself.
-3. Make sure **"Commit directly to the main branch"** is selected.
-4. Click **Commit changes**.
+1. Save your new photo as a **`.jpg`** (a wide, landscape photo looks best).
+2. On GitHub, open the **`src/assets`** folder.
+3. Click **Add file → Upload files**, drag your photo in, and **rename it to
+   exactly `hero.jpg`** so it replaces the old one. (If it asks, commit the
+   change.)
 
-That's it. You're done. ✅
+---
 
-### Step 4 — Check that it worked
+## Check that it worked
 
-1. After you commit, a small **yellow dot 🟡** appears near your change. That
-   means the site is updating. Wait a minute — it turns into a
-   **green check ✓** when it's finished. (A **red ✗** means something went
-   wrong — see "If something looks wrong" below.)
+1. After you commit, a small **yellow dot 🟡** appears — the site is rebuilding.
+   Wait a minute; it becomes a **green check ✓** when finished.
+   - A **red ✗** means the rebuild failed and the live site was **left
+     unchanged** (so visitors never see a broken page). See "If something goes
+     wrong" below.
 2. Open **https://weeeeeiserbikes.staging.tripoli.systems** in a new tab.
-3. If you still see the old version, do a **hard refresh** to clear your
-   browser's memory of the old page:
+3. Still seeing the old version? Do a **hard refresh** to clear your browser's
+   memory of the old page:
    - **Windows:** hold **Ctrl** and press **F5**
-   - **Mac:** hold **⌘ Cmd** and **Shift** and press **R**
-
-Your update is now live for everyone.
+   - **Mac:** hold **⌘ Cmd + Shift** and press **R**
 
 ---
 
-## If something looks wrong
+## If something goes wrong
 
-**Best safety net: every version is saved, and you can always go back.**
+**You can't break anything permanently — every version is saved.**
 
-- If a change broke the site or looks wrong, click the **"History"** link
-  (top of the file list) to see every past version. You can open an older,
-  working version and put it back the same way you made the change.
-- The site only changes when *you* commit, so it won't change on its own.
-- If you're stuck, send this to whoever set up the site for you — they can
-  undo any change in seconds.
+- A **red ✗** usually means a quote or bracket got changed by accident. The live
+  site is safe; nothing went out.
+- Click the **"History"** link (top of the file list) to see every past version.
+  Open the last good one and put it back the same way you made the change — or
+  send it to whoever set up your site and they'll undo it in seconds.
 
 ---
 
 ## Good to know
 
-- **Updates take about 1–2 minutes** after you commit. If it's been longer
-  than ~5 minutes and the green check ✓ showed up, just hard-refresh
-  (Step 4.3). If you see a red ✗ instead, the update didn't go out — go back
-  to "History" and restore the last good version.
-- **You can't break anything permanently.** Old versions are always saved.
+- **Changes take about 1–2 minutes** to go live after the green check ✓.
+- **A failed build never reaches visitors** — the current site stays up until a
+  good version is ready.
 - **The address** (`weeeeeiserbikes.staging.tripoli.systems`) is a temporary
-  staging address. When you're ready to point your real domain name (like
-  `sagebrushcycle.com`) at it, ask your setup helper.
+  staging address. When you're ready to use your real domain
+  (like `sagebrushcycle.co`), ask your setup helper.
 
 ---
 
-## For your web designer / helper (the technical bits)
+## For your web developer (the technical bits)
 
-*Skip this section unless you maintain the site's plumbing.*
+*Skip this unless you maintain the site.*
 
-- `public/index.html` is the deployed artifact — a self-contained standalone
-  export (React + fonts + assets all inlined; no CDN, no build step). nginx
-  serves `public/` as-is.
-- `src/` is the editable design source (JSX components, CSS, SVGs, fonts) the
-  standalone file was exported from. It is **not** served or built by CI —
-  it's an archive for regeneration. Re-export the standalone HTML and drop it
-  in as `public/index.html`.
-- A push to `main` touching `public/**`, `Dockerfile`, `.dockerignore`,
-  `deploy/**`, or the workflow triggers GitHub Actions, which builds an
-  `nginx:alpine` image (`ghcr.io/licenseplated/sagebrushcycles`), publishes a
+- **`src/` is the source of truth; `public/` is generated and git-ignored.**
+  `npm run build` (`build.mjs`) transpiles the JSX to classic
+  `React.createElement` with esbuild, prepends the vendored
+  React/ReactDOM/lucide from `src/vendor/` (no CDN, no in-browser Babel),
+  copies the CSS/fonts/SVGs/photo, and writes `public/index.html` + `app.js`.
+- The site is the design-tool export kept in its on-globals/load-order form
+  (`ui → Header → Hero → Rates → RentalForm → Footer → App`, then
+  `image-slot.js`); the hero photo is wired via the `<image-slot src="…">`
+  fallback so it's a plain swappable file.
+- **Build/deploy:** a multi-stage `Dockerfile` (node build stage → nginx) runs
+  the same `npm run build`. Pushes to `main` touching `src/**`, `build.mjs`,
+  `package*.json`, `Dockerfile`, or the workflow trigger GitHub Actions, which
+  builds the image (`ghcr.io/licenseplated/sagebrushcycles`), publishes a
   digest-pinned manifest bundle (`…/sagebrushcycles-deploy`) as a Flux OCI
-  artifact, and pings the rumi Flux Receiver. README/docs-only commits are
-  skipped. Full design + activation runbook is in the meta-repo at
+  artifact, and pings the rumi Flux Receiver. Full runbook in the meta-repo at
   `rumi/docs/apps/weeeeeiserbikes.md`.
+- **Local preview:** `npm install && npm run preview` → http://localhost:8080.

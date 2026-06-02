@@ -1,7 +1,9 @@
-# Only public/ is copied into the image; keep the build context lean.
+# The image builds from src/ via build.mjs, so the build context needs src/,
+# package*.json and build.mjs — but not these:
+node_modules
+public
 .git
 .github
 deploy
-src
 README.md
 *.swp

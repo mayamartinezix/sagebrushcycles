@@ -21,11 +21,15 @@ name: build-deploy
 on:
   push:
     branches: [main]
-    # Only rebuild/redeploy when something that affects the image or the
-    # deploy bundle changes — skip README-only / docs commits. Use
-    # workflow_dispatch for a manual redeploy without a code change.
+    # Only rebuild/redeploy when something that affects the built site or the
+    # deploy bundle changes — skip README-only / docs commits. The site is
+    # generated from src/ by the build, so trigger on the source, not the
+    # generated public/. Use workflow_dispatch for a manual redeploy.
     paths:
-      - "public/**"
+      - "src/**"
+      - "build.mjs"
+      - "package.json"
+      - "package-lock.json"
       - "Dockerfile"
       - ".dockerignore"
       - "deploy/**"
