@@ -1,0 +1,6 @@
+# Only public/ is copied into the image; keep the build context lean.
+.git
+.github
+deploy
+README.md
+*.swp

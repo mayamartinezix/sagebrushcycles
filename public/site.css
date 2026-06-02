@@ -1,0 +1,70 @@
+:root {
+  --sage: #8a9a5b;
+  --sage-dark: #5f6f3f;
+  --sand: #e9e2d0;
+  --dusk: #2b2a26;
+  --ink: #1c1b18;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--sand);
+  background: radial-gradient(circle at 50% 18%, var(--sage-dark), var(--dusk) 70%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  gap: 0.5rem;
+}
+
+.logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.tagline {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--sage);
+  margin: 0;
+}
+
+.soon {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  opacity: 0.75;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.foot {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}

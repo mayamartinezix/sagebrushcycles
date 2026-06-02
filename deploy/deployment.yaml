@@ -1,0 +1,50 @@
+---
+# image is digest-pinned by CI: __IMAGE__ is rewritten to
+# ghcr.io/licenseplated/sagebrushcycles@sha256:<digest> before the bundle is
+# pushed, so each new build changes the manifest and rolls the pod.
+#
+# ghcr.io/licenseplated/sagebrushcycles is private; the cluster-wide
+# `ghcr-pull` Secret (rumi infrastructure/external-secrets-store/ghcr-pull.yaml,
+# fanned to every namespace from Vault kv/ghcr/pull) authenticates the pull.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weeeeeiserbikes
+  namespace: weeeeeiserbikes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weeeeeiserbikes
+  template:
+    metadata:
+      labels:
+        app: weeeeeiserbikes
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: nginx
+          image: __IMAGE__
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 200m
+              memory: 64Mi
