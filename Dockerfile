@@ -11,7 +11,9 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
-# nginx:alpine serves /usr/share/nginx/html on :80 out of the box.
+# alpine-slim drops the extra nginx modules/perl we don't need for a static
+# site — meaningfully smaller than nginx:alpine, same correct MIME handling.
+FROM nginx:alpine-slim
+# nginx serves /usr/share/nginx/html on :80 out of the box.
 COPY --from=build /app/public /usr/share/nginx/html
 EXPOSE 80
