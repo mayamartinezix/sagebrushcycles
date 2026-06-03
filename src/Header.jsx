@@ -6,7 +6,7 @@ function Header() {
       <a className="sb-brand" href="#top">
         <img className="sb-brand__mark" src={`${ASSETS}/emblem.svg`} alt="Sagebrush Cycle emblem" />
         <span className="sb-brand__text">
-          Sagebrush Cycle
+          Sagebrush Cycles
           <small>BIKE RENTALS · WEISER TRAIL</small>
         </span>
       </a>
