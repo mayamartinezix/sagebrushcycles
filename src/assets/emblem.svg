@@ -1,0 +1,56 @@
+<svg width="264" height="264" viewBox="-12 -12 264 264" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sagebrush Cycle emblem">
+  
+  <circle cx="120" cy="120" r="116" fill="#F6EEE1" stroke="#748B58" stroke-width="8"></circle>
+  <circle cx="120" cy="120" r="100" fill="none" stroke="#C7D4B2" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"></circle>
+  
+  <clipPath id="scene"><circle cx="120" cy="120" r="92"></circle></clipPath>
+  <g clip-path="url(#scene)">
+    <rect x="28" y="28" width="184" height="184" fill="#EAF1DE"></rect>
+    
+    <path d="M28 150 L52 150 L60 132 L96 132 L104 150 L212 150 L212 212 L28 212 Z" fill="#CC7B52"></path>
+    
+    <g fill="#8AA06F">
+      <path d="M139 166 L161 166 L150 149 Z"></path><path d="M141 156 L159 156 L150 142 Z"></path><path d="M144 148 L156 148 L150 132 Z"></path>
+      <path d="M157 166 L183 166 L170 145 Z"></path><path d="M160 154 L180 154 L170 136 Z"></path><path d="M163 143 L177 143 L170 124 Z"></path>
+      <path d="M181 166 L199 166 L190 152 Z"></path><path d="M183 158 L197 158 L190 146 Z"></path><path d="M185 151 L195 151 L190 138 Z"></path>
+    </g>
+    
+    <path d="M28 168 L72 168 L84 156 L140 156 L154 168 L212 168 L212 212 L28 212 Z" fill="#B5613B"></path>
+    
+    <rect x="28" y="186" width="184" height="26" fill="#5C7144"></rect>
+    <path d="M118 212 C115 203 140 199 142 190 C144 181 124 178 126 171 C128 165 138 164 144 161" fill="none" stroke="#E2D0B3" stroke-width="9" stroke-linecap="round"></path>
+    <path d="M118 212 C115 203 140 199 142 190 C144 181 124 178 126 171 C128 165 138 164 144 161" fill="none" stroke="#F1E6D0" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 9"></path>
+    
+    <g fill="#43542F">
+      <rect x="49" y="190" width="6" height="9" fill="#B5613B"></rect>
+      <rect x="77" y="192" width="6" height="9" fill="#B5613B"></rect>
+      <rect x="101" y="190" width="6" height="9" fill="#B5613B"></rect>
+      
+      <path d="M33 190 L71 190 L52 161 Z"></path><path d="M37 174 L67 174 L52 148 Z"></path><path d="M42 159 L62 159 L52 132 Z"></path>
+      
+      <path d="M64 192 L96 192 L80 169 Z"></path><path d="M67 179 L93 179 L80 159 Z"></path><path d="M71 167 L89 167 L80 146 Z"></path>
+      
+      <path d="M90 190 L118 190 L104 171 Z"></path><path d="M93 179 L115 179 L104 163 Z"></path><path d="M96 170 L112 170 L104 152 Z"></path>
+    </g>
+    
+    <g stroke="#43542F" stroke-width="3.5" stroke-linecap="round">
+      <line x1="36" y1="200" x2="36" y2="186"></line><line x1="36" y1="193" x2="30" y2="185"></line><line x1="36" y1="193" x2="42" y2="185"></line>
+    </g>
+  </g>
+  
+  <circle cx="120" cy="120" r="92" fill="none" stroke="#748B58" stroke-width="4"></circle>
+  <!-- wheel spokes: sun rays, upper hemisphere only, gapped from hub and inner ring -->
+  <g stroke="#E8B65A" stroke-width="2.6" stroke-linecap="round" opacity="0.92">
+    <line x1="144" y1="120" x2="202" y2="120"></line>
+    <line x1="96" y1="120" x2="38" y2="120"></line>
+    <line x1="99.2" y1="108" x2="49" y2="79"></line>
+    <line x1="108" y1="99.2" x2="79" y2="49"></line>
+    <line x1="120" y1="96" x2="120" y2="38"></line>
+    <line x1="132" y1="99.2" x2="161" y2="49"></line>
+    <line x1="140.8" y1="108" x2="191" y2="79"></line>
+  </g>
+  <!-- hub: the sun, now small and central -->
+  <circle cx="120" cy="120" r="15" fill="#F0C868" stroke="#E8B65A" stroke-width="3"></circle>
+  <!-- bicycle fender: curved band hugging outside of the badge ring (the tire) -->
+  <path d="M-6 120 A 126 126 0 0 1 229.1 57" fill="none" stroke="#748B58" stroke-width="8" stroke-linecap="round"></path>
+</svg>
