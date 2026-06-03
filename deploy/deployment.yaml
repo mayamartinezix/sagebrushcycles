@@ -29,12 +29,50 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-pull
+      volumes:
+        - name: grav-data
+          persistentVolumeClaim:
+            claimName: weeeeeiserbikes-grav-data
+      # Seed the (initially empty) PVC from the image's pristine user/ dirs on
+      # first boot, so pages/config exist and accounts/data have a home. Only
+      # the mutable dirs are persisted — themes/plugins stay from the image.
+      initContainers:
+        - name: seed-data
+          image: __IMAGE__
+          command:
+            - sh
+            - -c
+            - |
+              for d in pages config data accounts; do
+                if [ ! -e "/data/$d" ]; then
+                  if [ -e "/var/www/html/user/$d" ]; then cp -a "/var/www/html/user/$d" "/data/$d";
+                  else mkdir -p "/data/$d"; fi
+                fi
+              done
+              chown -R www-data:www-data /data
+          volumeMounts:
+            - name: grav-data
+              mountPath: /data
       containers:
         - name: grav
           image: __IMAGE__
           ports:
             - name: http
               containerPort: 80
+          # PVC-backed mutable dirs (admin edits persist). The theme — incl. the
+          # React app.js bundle — is deliberately NOT mounted, so it updates with
+          # each image build.
+          volumeMounts:
+            - { name: grav-data, mountPath: /var/www/html/user/pages,    subPath: pages }
+            - { name: grav-data, mountPath: /var/www/html/user/accounts, subPath: accounts }
+            - { name: grav-data, mountPath: /var/www/html/user/config,   subPath: config }
+            - { name: grav-data, mountPath: /var/www/html/user/data,     subPath: data }
+          envFrom:
+            # GRAV_ADMIN_PASSWORD from Vault (kv/grav-admin). optional:true so the
+            # pod (and the site) start before the secret is seeded.
+            - secretRef:
+                name: grav-admin
+                optional: true
           readinessProbe:
             httpGet:
               path: /

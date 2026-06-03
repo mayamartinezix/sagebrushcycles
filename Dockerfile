@@ -28,12 +28,15 @@ FROM php:8.3-apache
 # Pinned Grav release (stable 1.7 line). Bump deliberately.
 ARG GRAV_VERSION=1.7.52
 
-# Admin login seed. Override --build-arg or via runtime env for real deploys.
-# In production this MUST come from a secret (see CMS-NOTES.md), not this default.
-ARG GRAV_ADMIN_USER=admin
-ARG GRAV_ADMIN_EMAIL=admin@sagebrushcycle.co
-ARG GRAV_ADMIN_PASSWORD=ChangeMe-Sagebrush-Staging-2026!
-ARG GRAV_ADMIN_FULLNAME="Sagebrush Admin"
+# Admin account settings. The account is created at RUNTIME by the entrypoint
+# (not baked into the image), so the password lives only in the injected env.
+# In k8s, GRAV_ADMIN_PASSWORD comes from the grav-admin Secret (Vault
+# kv/grav-admin) and overrides this default; the default below only makes a
+# bare `docker run` usable locally.
+ENV GRAV_ADMIN_USER=admin \
+    GRAV_ADMIN_EMAIL=admin@sagebrushcycle.co \
+    GRAV_ADMIN_PASSWORD=ChangeMe-Sagebrush-Staging-2026! \
+    GRAV_ADMIN_FULLNAME="Sagebrush Admin"
 
 # System libs + PHP extensions Grav needs (gd, zip), plus opcache for perf.
 RUN set -eux; \
@@ -79,19 +82,18 @@ COPY --from=build /app/public/site.css            /var/www/html/user/themes/sage
 COPY --from=build /app/public/assets              /var/www/html/user/themes/sagebrush/site/assets
 COPY --from=build /app/public/fonts               /var/www/html/user/themes/sagebrush/site/fonts
 
-# Seed the admin account (b = Admin + Site access) non-interactively via the
-# bundled login plugin, clear caches, fix ownership for the apache user.
+# Clear caches + fix ownership for the apache user. The admin account is NOT
+# created here — the entrypoint creates it at runtime from the injected
+# password, so no credential is baked into the image.
 RUN set -eux; \
-    php bin/plugin login new-user \
-      --user="${GRAV_ADMIN_USER}" \
-      --email="${GRAV_ADMIN_EMAIL}" \
-      --password="${GRAV_ADMIN_PASSWORD}" \
-      --permissions=b \
-      --fullname="${GRAV_ADMIN_FULLNAME}" \
-      --state=enabled \
-      --no-interaction; \
     php bin/grav clearcache; \
     chown -R www-data:www-data /var/www/html
 
+# Entrypoint creates the admin account on first boot (from $GRAV_ADMIN_PASSWORD)
+# and fixes ownership of the PVC-mounted user/ dirs, then hands off to Apache.
+COPY grav/docker-entrypoint.sh /usr/local/bin/sagebrush-entrypoint.sh
+RUN chmod +x /usr/local/bin/sagebrush-entrypoint.sh
+
 EXPOSE 80
-# php:8.3-apache's default CMD (apache2-foreground) runs Apache on :80.
+ENTRYPOINT ["/usr/local/bin/sagebrush-entrypoint.sh"]
+CMD ["apache2-foreground"]

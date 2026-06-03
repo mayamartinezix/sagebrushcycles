@@ -1,0 +1,17 @@
+---
+# Persists Grav's mutable data (user/{pages,accounts,config,data}) so admin
+# edits survive pod restarts. The theme (incl. the React app.js bundle) stays
+# in the image — NOT on the PVC — so theme/app updates from new image builds
+# still take effect. Uses the cluster's default local-path storageclass
+# (WaitForFirstConsumer: binds when the pod schedules).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: weeeeeiserbikes-grav-data
+  namespace: weeeeeiserbikes-grav
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
