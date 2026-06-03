@@ -16,6 +16,14 @@ const RATES = [
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
     popular: true,
   },
+  {
+    icon: 'car',
+    name: 'Bike rack',
+    price: '+ $20',
+    unit: 'adventures everywhere you go',
+    desc: 'Don"t worry about too many bikes and too few arms! We got you.', 
+    popular: true,
+  },
 ];
 
 function Rates() {
