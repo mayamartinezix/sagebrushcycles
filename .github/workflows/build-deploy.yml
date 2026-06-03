@@ -1,30 +1,24 @@
 name: build-deploy
 
-# Build the nginx image, push it to ghcr.io, render the digest-pinned deploy
-# manifest bundle and push it as a Flux OCI artifact, then ping rumi's Flux
-# Receiver to pull immediately.
+# VARIANT BRANCH: cms/grav — Grav CMS overlay.
 #
-# rumi side: apps/weeeeeiserbikes/ in the rumi repo holds the OCIRepository
-# (tracks `sagebrushcycles-deploy:preview`), the Kustomization, and the
-# generic-hmac Receiver fronted by flux-webhook.staging.tripoli.systems.
+# Same pipeline as main, parameterized for this variant: build the Grav image
+# (php:8.3-apache + Grav + Admin, with the prebuilt static React bundle baked
+# into the sagebrush theme), push it to ghcr with variant-prefixed tags, render
+# the digest-pinned deploy bundle, push it as a Flux OCI artifact (tag
+# `grav-preview`), then ping rumi's Flux Receiver for the -grav subdomain.
 #
-# Required repo secrets:
-#   RUMI_FLUX_WEBHOOK_URL    Full receiver URL incl. the /hook/<token> path
-#                            (read it from the Receiver status once applied:
-#                            kubectl -n flux-system get receiver weeeeeiserbikes
-#                              -o jsonpath='{.status.webhookPath}')
-#   RUMI_FLUX_WEBHOOK_TOKEN  The HMAC token (same value seeded in Vault
-#                            kv/flux-webhook under `token`)
-# Both optional — if unset, the job still builds/pushes and rumi picks the
-# change up on the OCIRepository's poll interval.
+# rumi side: apps/weeeeeiserbikes-grav/ in the rumi repo holds the
+# OCIRepository (tracks `sagebrushcycles-deploy:grav-preview`), Kustomization,
+# and generic-hmac Receiver fronted by flux-webhook.staging.tripoli.systems.
+#
+# Required repo secrets (optional — falls back to the OCIRepository poll):
+#   RUMI_FLUX_WEBHOOK_URL_GRAV    Receiver URL incl. the /hook/<token> path.
+#   RUMI_FLUX_WEBHOOK_TOKEN_GRAV  HMAC token (same value in Vault kv/flux-webhook-grav).
 
 on:
   push:
-    branches: [main]
-    # Only rebuild/redeploy when something that affects the built site or the
-    # deploy bundle changes — skip README-only / docs commits. The site is
-    # generated from src/ by the build, so trigger on the source, not the
-    # generated public/. Use workflow_dispatch for a manual redeploy.
+    branches: [cms/grav]
     paths:
       - "src/**"
       - "build.mjs"
@@ -32,6 +26,7 @@ on:
       - "package-lock.json"
       - "Dockerfile"
       - ".dockerignore"
+      - "grav/**"
       - "deploy/**"
       - ".github/workflows/build-deploy.yml"
   workflow_dispatch:
@@ -45,6 +40,7 @@ permissions:
   packages: write
 
 env:
+  VARIANT: grav
   IMAGE_REPO: ghcr.io/licenseplated/sagebrushcycles
   DEPLOY_REPO: ghcr.io/licenseplated/sagebrushcycles-deploy
   FLUX_VERSION: "2.8.6"
@@ -52,7 +48,7 @@ env:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -72,13 +68,10 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          # provenance:false keeps the pushed tag a single image manifest
-          # (no attestation index), so the digest we pin below is the image
-          # itself.
           provenance: false
           tags: |
-            ${{ env.IMAGE_REPO }}:preview
-            ${{ env.IMAGE_REPO }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:${{ env.VARIANT }}-preview
+            ${{ env.IMAGE_REPO }}:${{ env.VARIANT }}-${{ github.sha }}
 
       - name: Setup Flux CLI
         run: |
@@ -97,24 +90,24 @@ jobs:
           grep -q "__IMAGE__" deploy/deployment.yaml && { echo "image placeholder not substituted"; exit 1; } || true
 
           flux push artifact \
-            "oci://${DEPLOY_REPO}:${{ github.sha }}" \
+            "oci://${DEPLOY_REPO}:${VARIANT}-${{ github.sha }}" \
             --path=deploy \
             --source="${{ github.server_url }}/${{ github.repository }}" \
-            --revision="main@sha1:${{ github.sha }}" \
+            --revision="${{ github.ref_name }}@sha1:${{ github.sha }}" \
             --creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
           flux tag artifact \
-            "oci://${DEPLOY_REPO}:${{ github.sha }}" \
+            "oci://${DEPLOY_REPO}:${VARIANT}-${{ github.sha }}" \
             --creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" \
-            --tag preview
+            --tag "${VARIANT}-preview"
 
       - name: Trigger rumi Flux Receiver
         env:
-          WEBHOOK_URL: ${{ secrets.RUMI_FLUX_WEBHOOK_URL }}
-          WEBHOOK_TOKEN: ${{ secrets.RUMI_FLUX_WEBHOOK_TOKEN }}
+          WEBHOOK_URL: ${{ secrets.RUMI_FLUX_WEBHOOK_URL_GRAV }}
+          WEBHOOK_TOKEN: ${{ secrets.RUMI_FLUX_WEBHOOK_TOKEN_GRAV }}
         run: |
           set -euo pipefail
           if [ -z "${WEBHOOK_URL:-}" ] || [ -z "${WEBHOOK_TOKEN:-}" ]; then
-            echo "RUMI_FLUX_WEBHOOK_URL / _TOKEN not set — rumi will pick this up on the OCIRepository poll interval."
+            echo "RUMI_FLUX_WEBHOOK_URL_GRAV / _TOKEN_GRAV not set — rumi picks this up on the OCIRepository poll interval."
             exit 0
           fi
           payload='{}'

@@ -6,25 +6,31 @@
 # ghcr.io/licenseplated/sagebrushcycles is private; the cluster-wide
 # `ghcr-pull` Secret (rumi infrastructure/external-secrets-store/ghcr-pull.yaml,
 # fanned to every namespace from Vault kv/ghcr/pull) authenticates the pull.
+#
+# NOTE: Grav stores content as flat files inside the container. Admin edits do
+# NOT survive a pod restart unless user/ is on a PVC. See CMS-NOTES.md for the
+# ephemeral-storage caveat and the optional PVC + volumeMounts to add here.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weeeeeiserbikes
-  namespace: weeeeeiserbikes
+  name: weeeeeiserbikes-grav
+  namespace: weeeeeiserbikes-grav
+  labels:
+    app: weeeeeiserbikes-grav
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weeeeeiserbikes
+      app: weeeeeiserbikes-grav
   template:
     metadata:
       labels:
-        app: weeeeeiserbikes
+        app: weeeeeiserbikes-grav
     spec:
       imagePullSecrets:
         - name: ghcr-pull
       containers:
-        - name: nginx
+        - name: grav
           image: __IMAGE__
           ports:
             - name: http
@@ -33,18 +39,18 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 3
+            initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 20
           resources:
             requests:
-              cpu: 10m
-              memory: 16Mi
+              cpu: 50m
+              memory: 128Mi
             limits:
-              cpu: 200m
-              memory: 64Mi
+              cpu: 500m
+              memory: 256Mi

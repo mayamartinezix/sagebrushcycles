@@ -1,0 +1,112 @@
+# Admin form for the Sagebrush home page (template: sagebrush).
+# Gives the website owner friendly fields for the site copy instead of raw
+# frontmatter. Falls back to Expert mode YAML editing if you prefer.
+title: Sagebrush Home
+extends@: default
+
+form:
+  fields:
+    tabs:
+      type: tabs
+      fields:
+
+        content-tab:
+          type: tab
+          title: Site Copy
+          fields:
+
+            header.content.business.name:
+              type: text
+              label: Business name
+            header.content.business.tagline:
+              type: text
+              label: Tagline
+            header.content.business.phoneDisplay:
+              type: text
+              label: Phone (display)
+            header.content.business.phoneHref:
+              type: text
+              label: Phone (tel: link, e.g. +12085550148)
+            header.content.business.email:
+              type: text
+              label: Email
+
+            header.content.hero.eyebrow:
+              type: text
+              label: Hero eyebrow
+            header.content.hero.titleLine1:
+              type: text
+              label: Hero title line 1
+            header.content.hero.titleLine2:
+              type: text
+              label: Hero title line 2
+            header.content.hero.lead:
+              type: textarea
+              label: Hero lead paragraph
+            header.content.hero.ctaPrimary:
+              type: text
+              label: Primary CTA label
+            header.content.hero.ctaPhone:
+              type: text
+              label: Phone CTA label
+            header.content.hero.badge:
+              type: text
+              label: Hero badge
+
+            header.content.rates.title:
+              type: text
+              label: Rates heading
+            header.content.rates.sub:
+              type: textarea
+              label: Rates subheading
+            header.content.rates.items:
+              type: list
+              label: Rate cards
+              style: vertical
+              fields:
+                .icon:
+                  type: select
+                  label: Icon
+                  options:
+                    sun: sun
+                    bike: bike
+                .name:
+                  type: text
+                  label: Name
+                .price:
+                  type: text
+                  label: Price
+                .unit:
+                  type: text
+                  label: Unit
+                .desc:
+                  type: textarea
+                  label: Description
+                .popular:
+                  type: toggle
+                  label: Popular?
+                  highlight: 1
+                  options:
+                    1: Yes
+                    0: No
+                  validate:
+                    type: bool
+
+            header.content.footer.findTitle:
+              type: text
+              label: Footer "Find us" title
+            header.content.footer.findBody:
+              type: textarea
+              label: Footer "Find us" body (use new lines)
+            header.content.footer.openTitle:
+              type: text
+              label: Footer "Open" title
+            header.content.footer.openBody:
+              type: textarea
+              label: Footer "Open" body (use new lines)
+            header.content.footer.sayTitle:
+              type: text
+              label: Footer "Say hi" title
+            header.content.footer.note:
+              type: textarea
+              label: Footer note

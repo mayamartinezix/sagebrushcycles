@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: weeeeeiserbikes
-  namespace: weeeeeiserbikes
+  name: weeeeeiserbikes-grav
+  namespace: weeeeeiserbikes-grav
 spec:
   type: ClusterIP
   selector:
-    app: weeeeeiserbikes
+    app: weeeeeiserbikes-grav
   ports:
     - name: http
       port: 80
