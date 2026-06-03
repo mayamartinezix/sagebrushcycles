@@ -3,6 +3,11 @@
 # terminated upstream by Caddy on the rumi host (ansible/playbooks/caddy.yml),
 # covered by the edge *.staging.tripoli.systems wildcard cert. odd diverts the
 # hostname to rumi via an haproxy SNI route (odd/ansible/group_vars/all.yml).
+#
+# Two backends on one hostname: the OAuth sidecar handles the Decap login
+# handshake at /auth, /callback, /success (:3000); the static site (nginx, :80)
+# serves everything else. Gateway API matches the most specific path first, so
+# the /auth + /callback + /success prefixes win over /.
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -15,6 +20,19 @@ spec:
   hostnames:
     - weeeeeiserbikes-decap.staging.tripoli.systems
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+        - path:
+            type: PathPrefix
+            value: /callback
+        - path:
+            type: PathPrefix
+            value: /success
+      backendRefs:
+        - name: weeeeeiserbikes-decap
+          port: 3000
     - matches:
         - path:
             type: PathPrefix

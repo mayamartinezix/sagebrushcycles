@@ -51,3 +51,41 @@ spec:
             limits:
               cpu: 200m
               memory: 64Mi
+        # OAuth provider sidecar for the Decap editor (built from oauth/Dockerfile;
+        # __OAUTH_IMAGE__ is digest-pinned by CI alongside __IMAGE__). The site's
+        # HTTPRoute path-routes /auth + /callback to this container on :3000.
+        - name: oauth
+          image: __OAUTH_IMAGE__
+          ports:
+            - name: oauth
+              containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            # Bare hostname(s) login may succeed on (no scheme) — vencax matches
+            # the postMessage origin against this.
+            - name: ORIGINS
+              value: "weeeeeiserbikes-decap.staging.tripoli.systems"
+            # The public callback; must equal the GitHub OAuth App's callback URL.
+            - name: REDIRECT_URL
+              value: "https://weeeeeiserbikes-decap.staging.tripoli.systems/callback"
+          envFrom:
+            # OAUTH_CLIENT_ID / OAUTH_CLIENT_SECRET from Vault (kv/decap-oauth).
+            # optional:true so the pod (and the site) still start before the
+            # secret is seeded — only the login flow is unavailable until then.
+            - secretRef:
+                name: decap-oauth
+                optional: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: oauth
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 24Mi
+            limits:
+              cpu: 200m
+              memory: 96Mi

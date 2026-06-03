@@ -41,6 +41,7 @@ permissions:
 env:
   VARIANT: decap
   IMAGE_REPO: ghcr.io/licenseplated/sagebrushcycles
+  OAUTH_IMAGE_REPO: ghcr.io/licenseplated/sagebrushcycles-decap-oauth
   DEPLOY_REPO: ghcr.io/licenseplated/sagebrushcycles-deploy
   FLUX_VERSION: "2.8.6"
 
@@ -72,6 +73,18 @@ jobs:
             ${{ env.IMAGE_REPO }}:${{ env.VARIANT }}-preview
             ${{ env.IMAGE_REPO }}:${{ env.VARIANT }}-${{ github.sha }}
 
+      - name: Build and push OAuth sidecar image
+        id: build-oauth
+        uses: docker/build-push-action@v5
+        with:
+          context: oauth
+          file: oauth/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.OAUTH_IMAGE_REPO }}:preview
+            ${{ env.OAUTH_IMAGE_REPO }}:${{ github.sha }}
+
       - name: Setup Flux CLI
         run: |
           curl -fsSL "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" \
@@ -81,12 +94,16 @@ jobs:
       - name: Render + push deploy manifest artifact
         env:
           IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+          OAUTH_IMAGE_DIGEST: ${{ steps.build-oauth.outputs.digest }}
         run: |
           set -euo pipefail
           IMAGE="${IMAGE_REPO}@${IMAGE_DIGEST}"
-          echo "Pinning Deployment image to ${IMAGE}"
+          OAUTH_IMAGE="${OAUTH_IMAGE_REPO}@${OAUTH_IMAGE_DIGEST}"
+          echo "Pinning site image to ${IMAGE}"
+          echo "Pinning OAuth sidecar image to ${OAUTH_IMAGE}"
           sed -i "s|__IMAGE__|${IMAGE}|g" deploy/deployment.yaml
-          grep -q "__IMAGE__" deploy/deployment.yaml && { echo "image placeholder not substituted"; exit 1; } || true
+          sed -i "s|__OAUTH_IMAGE__|${OAUTH_IMAGE}|g" deploy/deployment.yaml
+          grep -qE "__IMAGE__|__OAUTH_IMAGE__" deploy/deployment.yaml && { echo "an image placeholder was not substituted"; exit 1; } || true
 
           flux push artifact \
             "oci://${DEPLOY_REPO}:${VARIANT}-${{ github.sha }}" \

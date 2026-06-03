@@ -49,21 +49,37 @@ GitHub Actions builds the nginx image → pushes `sagebrushcycles:decap-preview`
 `apps/weeeeeiserbikes-decap/` (see `deploy-rumi/` and the repo-root
 `INFRA-RUNBOOK.md`) applies it behind the `-decap` subdomain.
 
-## Required secrets / manual steps
+## OAuth login — sidecar in the same pod
 
-Decap's **GitHub backend needs an OAuth handler** (GitHub OAuth Apps can't do
-browser-only PKCE, so the editor cannot complete login by itself):
+Decap's GitHub backend can't complete login from the browser alone (GitHub
+OAuth Apps don't support browser-only PKCE), so the handshake is done by a tiny
+**OAuth provider sidecar** that runs **in the same pod** as the site:
+
+- **Image:** `oauth/Dockerfile` builds `vencax/netlify-cms-github-oauth-provider`
+  (pinned commit) → `ghcr.io/licenseplated/sagebrushcycles-decap-oauth` (CI).
+- **Pod:** a second container (`oauth`, :3000) in `deploy/deployment.yaml`.
+- **Routing:** the HTTPRoute sends `/auth`, `/callback`, `/success` to the
+  sidecar; everything else to nginx. So the proxy lives on the **same hostname**
+  as the site — `config.yml` `base_url` is just the site origin, no extra
+  subdomain / SNI / Caddy block.
+- **Secrets:** `OAUTH_CLIENT_ID` / `OAUTH_CLIENT_SECRET` come from Vault
+  (`kv/decap-oauth`) via the `decap-oauth` ExternalSecret (`optional: true`, so
+  the site still serves before the secret is seeded). `ORIGINS` and
+  `REDIRECT_URL` are set as plain env in the Deployment.
+
+### Manual steps to enable login
 
 1. **Register a GitHub OAuth App** (Settings → Developer settings → OAuth Apps):
    - Homepage URL: `https://weeeeeiserbikes-decap.staging.tripoli.systems`
-   - Authorization callback URL: the OAuth proxy's callback (see step 2).
-2. **Deploy an OAuth proxy** — e.g. `vencax/netlify-cms-github-oauth-provider`
-   or the same `sveltia-cms-auth` worker used by the Sveltia variant. Set
-   `config.yml`'s `backend.base_url` to its host (placeholder currently:
-   `https://decap-oauth.staging.tripoli.systems`).
-3. Store the OAuth **client id/secret** in the proxy via Vault/ExternalSecret —
-   **never commit them**.
-4. (Optional, instant deploys) repo secrets `RUMI_FLUX_WEBHOOK_URL_DECAP` /
+   - **Authorization callback URL:**
+     `https://weeeeeiserbikes-decap.staging.tripoli.systems/callback`
+2. **Put the credentials in Vault** (never commit them):
+   ```
+   vault kv put kv/decap-oauth client_id=<Client ID> client_secret=<Client Secret>
+   ```
+   The ExternalSecret syncs them into the pod within its refresh interval (or
+   restart the deployment to pick them up immediately).
+3. (Optional, instant deploys) repo secrets `RUMI_FLUX_WEBHOOK_URL_DECAP` /
    `RUMI_FLUX_WEBHOOK_TOKEN_DECAP`; Vault `kv/flux-webhook-decap`.
 
 ## Content-migration caveats

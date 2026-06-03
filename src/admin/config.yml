@@ -6,17 +6,18 @@
 # workflow → the -decap staging site rebuilds with the new copy.
 #
 # Backend: GitHub. Decap's GitHub backend needs an OAuth handler to log editors
-# in (GitHub OAuth Apps don't support browser-only PKCE). `base_url` +
-# `auth_endpoint` below point at an OAuth proxy that must be stood up
-# separately — see CMS-NOTES.md. Until it exists, this page loads but "Login
-# with GitHub" cannot complete.
+# in (GitHub OAuth Apps don't support browser-only PKCE). That handler runs as
+# a sidecar (vencax provider) IN the same pod as this site and is reached on the
+# SAME hostname — the site's HTTPRoute path-routes /auth and /callback to it.
+# So base_url is just the site's own origin. The GitHub OAuth App's callback
+# URL must be https://weeeeeiserbikes-decap.staging.tripoli.systems/callback,
+# and its client id/secret go in Vault kv/decap-oauth (→ the decap-oauth
+# Secret). See CMS-NOTES.md.
 backend:
   name: github
   repo: licenseplated/sagebrushcycles
   branch: cms/decap
-  # OAuth proxy (e.g. an instance of vencax/netlify-cms-github-oauth-provider
-  # or sveltia-cms-auth). Replace with the deployed proxy's host.
-  base_url: https://decap-oauth.staging.tripoli.systems
+  base_url: https://weeeeeiserbikes-decap.staging.tripoli.systems
   auth_endpoint: auth
 
 # Editors commit straight to cms/decap (no PR/editorial workflow on staging).

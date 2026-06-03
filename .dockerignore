@@ -5,5 +5,7 @@ public
 .git
 .github
 deploy
+oauth
 README.md
+CMS-NOTES.md
 *.swp

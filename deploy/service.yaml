@@ -12,3 +12,8 @@ spec:
     - name: http
       port: 80
       targetPort: http
+    # The OAuth sidecar (Decap login handshake). The HTTPRoute sends /auth and
+    # /callback here; everything else goes to :80 (nginx).
+    - name: oauth
+      port: 3000
+      targetPort: oauth
