@@ -70,6 +70,12 @@ COPY grav/theme/sagebrush/ /var/www/html/user/themes/sagebrush/
 COPY grav/pages/01.home/sagebrush.md /var/www/html/user/pages/01.home/sagebrush.md
 COPY grav/config/system.yaml /var/www/html/user/config/system.yaml
 COPY grav/config/site.yaml /var/www/html/user/config/site.yaml
+# Page blueprint must live under a pages/ subfolder to be in the
+# blueprints://pages/ stream. Ship it in the canonical user/blueprints/pages/
+# location too (most reliably scanned) so the admin renders the Site Copy form
+# fields instead of the raw frontmatter editor. (user/blueprints is not PVC-
+# mounted, so it stays from the image.)
+COPY grav/theme/sagebrush/blueprints/pages/sagebrush.yaml /var/www/html/user/blueprints/pages/sagebrush.yaml
 
 # Drop the stock quark home page so '/' renders via the sagebrush template.
 RUN rm -f /var/www/html/user/pages/01.home/default.md
