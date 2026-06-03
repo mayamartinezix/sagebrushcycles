@@ -17,7 +17,7 @@ const RATES = [
     popular: true,
   },
   {
-    icon: 'car icon',
+    icon: 'car',
     name: 'Bike rack',
     price: '+ $20',
     unit: 'adventures everywhere you go',
