@@ -9,17 +9,17 @@
     
     <path d="M28 150 L52 150 L60 132 L96 132 L104 150 L212 150 L212 212 L28 212 Z" fill="#CC7B52"></path>
     
-    <g fill="#8AA06F">
-      <path d="M139 166 L161 166 L150 149 Z"></path><path d="M141 156 L159 156 L150 142 Z"></path><path d="M144 148 L156 148 L150 132 Z"></path>
-      <path d="M157 166 L183 166 L170 145 Z"></path><path d="M160 154 L180 154 L170 136 Z"></path><path d="M163 143 L177 143 L170 124 Z"></path>
-      <path d="M181 166 L199 166 L190 152 Z"></path><path d="M183 158 L197 158 L190 146 Z"></path><path d="M185 151 L195 151 L190 138 Z"></path>
-    </g>
-    
     <path d="M28 168 L72 168 L84 156 L140 156 L154 168 L212 168 L212 212 L28 212 Z" fill="#B5613B"></path>
     
     <rect x="28" y="186" width="184" height="26" fill="#5C7144"></rect>
     <path d="M118 212 C115 203 140 199 142 190 C144 181 124 178 126 171 C128 165 138 164 144 161" fill="none" stroke="#E2D0B3" stroke-width="9" stroke-linecap="round"></path>
     <path d="M118 212 C115 203 140 199 142 190 C144 181 124 178 126 171 C128 165 138 164 144 161" fill="none" stroke="#F1E6D0" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 9"></path>
+    
+    <g fill="#8AA06F">
+      <path d="M139 166 L161 166 L150 149 Z"></path><path d="M141 156 L159 156 L150 142 Z"></path><path d="M144 148 L156 148 L150 132 Z"></path>
+      <path d="M157 166 L183 166 L170 145 Z"></path><path d="M160 154 L180 154 L170 136 Z"></path><path d="M163 143 L177 143 L170 124 Z"></path>
+      <path d="M181 166 L199 166 L190 152 Z"></path><path d="M183 158 L197 158 L190 146 Z"></path><path d="M185 151 L195 151 L190 138 Z"></path>
+    </g>
     
     <g fill="#43542F">
       <rect x="49" y="190" width="6" height="9" fill="#B5613B"></rect>
