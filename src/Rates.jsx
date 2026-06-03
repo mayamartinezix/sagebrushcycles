@@ -21,7 +21,7 @@ const RATES = [
     name: 'Bike rack',
     price: '+ $20',
     unit: 'adventures everywhere you go',
-    desc: 'Don"t worry about too many bikes and too few arms! We got you.', 
+    desc: 'Want a great rack? We got you.', 
     popular: true,
   },
 ];
