@@ -22,7 +22,7 @@ const RATES = [
     price: '+ $20',
     unit: 'adventures everywhere you go',
     desc: 'Want a great rack? We got you.', 
-    popular: true,
+    
   },
 ];
 
