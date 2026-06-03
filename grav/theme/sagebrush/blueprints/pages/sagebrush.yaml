@@ -33,7 +33,7 @@ form:
               label: Phone (display)
             header.content.business.phoneHref:
               type: text
-              label: Phone (tel: link, e.g. +12085550148)
+              label: "Phone (tel: link, e.g. +12085550148)"
             header.content.business.email:
               type: text
               label: Email
