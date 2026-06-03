@@ -11,10 +11,14 @@
   Docker build: /user/themes/sagebrush/site/. Every relative ref in the doc and
   inside the CSS (fonts/..., assets/...) resolves against it.
 #}
-{# url() strips the trailing slash; <base href> MUST end in '/' or relative
-   refs resolve one dir too high (.../sagebrush/app.js instead of
-   .../sagebrush/site/app.js). Trim any trailing slash and add exactly one. #}
-{%- set site = url('theme://site', true)|trim('/') ~ '/' -%}
+{# ROOT-RELATIVE base href (leading + trailing slash). Grav serves this site at
+   the domain root, so the theme assets live at /user/themes/sagebrush/site/.
+   We deliberately do NOT use an absolute url() here: behind APISIX/Caddy, Grav's
+   absolute URL detection picks up the internal gateway port (…:9080), so an
+   absolute base would send asset requests to an unreachable port and the page
+   would render blank. A root-relative base resolves against the browser's real
+   origin (https://…:443), correct both locally and in staging. #}
+{%- set site = '/user/themes/sagebrush/site/' -%}
 {%- set content = page.header.content -%}
 <!doctype html>
 <html lang="en">

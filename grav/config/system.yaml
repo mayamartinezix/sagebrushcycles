@@ -2,6 +2,9 @@
 # system.yaml during the Docker build. Default theme -> sagebrush; '/' resolves
 # to the 01.home page.
 absolute_urls: false
+# Behind APISIX + Caddy: trust X-Forwarded-* so Grav (and the admin UI) generate
+# correct external URLs instead of the internal gateway host:port (…:9080).
+reverse_proxy_setup: true
 
 home:
   alias: '/home'
