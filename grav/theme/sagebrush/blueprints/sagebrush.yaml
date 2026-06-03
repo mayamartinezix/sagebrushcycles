@@ -1,8 +1,14 @@
 # Admin form for the Sagebrush home page (template: sagebrush).
 # Gives the website owner friendly fields for the site copy instead of raw
 # frontmatter. Falls back to Expert mode YAML editing if you prefer.
+#
+# A theme-provided PAGE blueprint must extend the page default with an explicit
+# context (blueprints://pages); the bare `extends@: default` shorthand resolves
+# the wrong "default" and the admin silently falls back to the raw editor.
 title: Sagebrush Home
-extends@: default
+'@extends':
+  type: default
+  context: blueprints://pages
 
 form:
   fields:
