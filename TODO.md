@@ -1,5 +1,13 @@
 # TODO — four CMS variants of the Sagebrush Cycle site
 
+> **STATUS (final outcome).** This was the original exploration plan; the work is
+> done and decided. **Live now:** the Original (`main`), **Decap** (`cms/decap`),
+> and **Grav** (`cms/grav`). **Evaluated and dropped:** **Sveltia** (covered by
+> Decap) and **WonderCMS** (its flat-HTML model can't edit this site's structured
+> content) — both have been removed (branches, deploys, and infra plumbing).
+> See [`VERSIONS.md`](./VERSIONS.md) for the current, owner-facing guide to the
+> live versions. The plan below is kept for historical context.
+
 Plan for standing up **four independent CMS variants** of
 `weeeeeiserbikes.staging.tripoli.systems`, each on its own branch and its own
 staging subdomain, **without touching the existing site or its deploy path**.
