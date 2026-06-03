@@ -73,17 +73,23 @@ spec:
             - secretRef:
                 name: grav-admin
                 optional: true
+          # startupProbe gives the first boot generous time (Grav cache warmup +
+          # account creation) before liveness takes over — up to 30×2s = 60s.
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 2
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 10
             periodSeconds: 20
           resources:
             requests:

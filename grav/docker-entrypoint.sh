@@ -23,13 +23,17 @@ if [ ! -f "user/accounts/${ACC_USER}.yaml" ]; then
       --fullname="${GRAV_ADMIN_FULLNAME:-Sagebrush Admin}" \
       --state=enabled --no-interaction \
       || echo "[sagebrush] WARNING: admin account creation failed; /admin login unavailable"
+    # new-user runs as root and boots Grav, which creates root-owned cache dirs
+    # (cache/doctrine) that Apache (www-data) then can't write → 500. Fix
+    # ownership of the small writable dirs it touched + the PVC-backed mutable
+    # dirs. Deliberately NOT a recursive chown of all of user/ (that walks the
+    # large admin-plugin tree and stalls startup past the probes).
+    chown -R www-data:www-data \
+      cache logs tmp backup \
+      user/accounts user/config user/data user/pages >/dev/null 2>&1 || true
   else
     echo "[sagebrush] GRAV_ADMIN_PASSWORD unset — skipping admin account creation (site still serves)"
   fi
 fi
-
-# Cache + ownership (PVC-mounted dirs come up owned by root).
-php bin/grav clearcache >/dev/null 2>&1 || true
-chown -R www-data:www-data user >/dev/null 2>&1 || true
 
 exec "$@"
