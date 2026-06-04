@@ -1,22 +1,25 @@
 # Versions of the Sagebrush Cycle website
 
-There are **three live versions** of this website. They look identical to a
+There are **four live versions** of this website. They look identical to a
 visitor — the difference is **how you edit them**. This page explains each one
 and gives step-by-step, no-experience-needed instructions for making changes.
 
 > Not sure which one is "yours"? If you want to edit the site by filling in
-> **form fields in a web page**, use **Decap** or **Grav**. If you're happy
-> editing the underlying files on GitHub, the **Original** is the simplest.
+> **form fields in a web page**, use **Decap**, **Grav**, or **WordPress**. If
+> you're happy editing the underlying files on GitHub, the **Original** is the
+> simplest.
 
 | Version | Address | How you edit it | Where edits are saved |
 |---|---|---|---|
 | **Original** | https://weeeeeiserbikes.staging.tripoli.systems | Edit the source files on GitHub | GitHub (the `main` branch) |
 | **Decap CMS** | https://weeeeeiserbikes-decap.staging.tripoli.systems | A web editor at **/admin** (log in with GitHub) | GitHub (the `cms/decap` branch) |
 | **Grav** | https://weeeeeiserbikes-grav.staging.tripoli.systems | Grav's admin at **/admin** (log in with a password) | The live site's own storage |
+| **WordPress** | https://weeeeeiserbikes-wordpress.staging.tripoli.systems | WordPress's **/wp-admin** → **Site Copy** (log in with a password) | The live site's own storage (a SQLite database) |
 
-All three auto-publish: after you save, the live site updates on its own
-(usually within a minute or two — Grav is near-instant). **A failed change never
-breaks the live site** — visitors keep seeing the last good version.
+All four auto-publish: after you save, the live site updates on its own
+(usually within a minute or two — Grav and WordPress are near-instant). **A
+failed change never breaks the live site** — visitors keep seeing the last good
+version.
 
 There were originally going to be five versions; two were evaluated and dropped
 — see [the end of this page](#evaluated-but-not-used).
@@ -106,6 +109,32 @@ The change shows on the site within a few seconds.
 
 ---
 
+## 4. WordPress — the CMS you've probably heard of (saves to the live site)
+
+- **Site:** https://weeeeeiserbikes-wordpress.staging.tripoli.systems
+- **Admin:** https://weeeeeiserbikes-wordpress.staging.tripoli.systems/wp-admin
+- **Best for:** people who already know WordPress, or want the most familiar
+  "log in and edit" dashboard.
+
+To make a change:
+
+1. Open **…/wp-admin**.
+2. Log in. **Username:** `admin`. **Password:** ask your setup helper — it's
+   stored securely (technical note: `vault kv get -field=password kv/wordpress-admin`).
+3. In the left menu, click **Site Copy**.
+4. Edit the labelled fields (business details, hero copy, the repeatable **Rate
+   cards** list, footer) and click **Save changes**.
+
+The change shows on the site within a few seconds.
+
+> **Same as Grav:** WordPress saves your edits to the **live site's own storage**
+> (here, a small built-in database), *not* to GitHub. Editing `src/content.json`
+> in GitHub will **not** change the WordPress site. Always edit it through
+> **/wp-admin → Site Copy**. (The big photo is part of the site's design files,
+> swapped in a rebuild — not in this form.)
+
+---
+
 ## After you make a change (any version)
 
 1. On GitHub, a small **yellow dot 🟡** appears next to your change while the site
@@ -125,9 +154,11 @@ The change shows on the site within a few seconds.
 For this site, the editing experience is best with **Decap** (free, fast,
 edits saved/versioned in GitHub, nothing extra to run) or **Grav** (a richer
 "log in and edit" dashboard, but heavier to run and its content lives outside
-GitHub). The **Original** is the lightest of all if you're comfortable editing
-files. Pick the one that matches how you'd like to work; the others can be
-retired.
+GitHub). **WordPress** is the most familiar dashboard of all, but the heaviest to
+run and, like Grav, keeps its content outside GitHub — worth it mainly if you
+already know WordPress or expect the site to grow into a blog. The **Original**
+is the lightest of all if you're comfortable editing files. Pick the one that
+matches how you'd like to work; the others can be retired.
 
 ---
 
@@ -146,11 +177,14 @@ Two more CMSes were trialed and intentionally **not** adopted:
 
 ### For the technical maintainer
 
-- Each version is a branch: `main` (Original), `cms/decap`, `cms/grav`. Pushing
-  to a branch rebuilds its image and redeploys its subdomain via GitHub Actions
-  → ghcr → Flux on the rumi cluster (see `CLAUDE.md` and, in the `rumi` repo,
-  `docs/apps/weeeeeiserbikes.md`). Decap/Sveltia are git-overlay (nginx) builds;
-  Grav is a PHP container with a persistent volume for its content + its admin
-  password from Vault (`kv/grav-admin`). Decap's GitHub login uses an OAuth
-  provider sidecar (`kv/decap-oauth`). The `cms/decap` and `cms/grav` branch
-  `CMS-NOTES.md` files document each variant in depth.
+- Each version is a branch: `main` (Original), `cms/decap`, `cms/grav`,
+  `cms/wordpress`. Pushing to a branch rebuilds its image and redeploys its
+  subdomain via GitHub Actions → ghcr → Flux on the rumi cluster (see `CLAUDE.md`
+  and, in the `rumi` repo, `docs/apps/weeeeeiserbikes.md`). Decap/Sveltia are
+  git-overlay (nginx) builds; Grav is a PHP container with a persistent volume
+  for its content + its admin password from Vault (`kv/grav-admin`). WordPress is
+  the **unmodified upstream `wordpress` image** serving a PVC that a custom
+  prep/init image seeds (theme + the built React bundle) and installs into
+  SQLite; admin password from Vault (`kv/wordpress-admin`). Decap's GitHub login
+  uses an OAuth provider sidecar (`kv/decap-oauth`). The `cms/decap`, `cms/grav`,
+  and `cms/wordpress` branch `CMS-NOTES.md` files document each variant in depth.
