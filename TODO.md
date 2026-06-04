@@ -2,11 +2,20 @@
 
 > **STATUS (final outcome).** This was the original exploration plan; the work is
 > done and decided. **Live now:** the Original (`main`), **Decap** (`cms/decap`),
-> and **Grav** (`cms/grav`). **Evaluated and dropped:** **Sveltia** (covered by
-> Decap) and **WonderCMS** (its flat-HTML model can't edit this site's structured
-> content) — both have been removed (branches, deploys, and infra plumbing).
-> See [`VERSIONS.md`](./VERSIONS.md) for the current, owner-facing guide to the
-> live versions. The plan below is kept for historical context.
+> **Grav** (`cms/grav`), and **WordPress** (`cms/wordpress`). **Evaluated and
+> dropped:** **Sveltia** (covered by Decap) and **WonderCMS** (its flat-HTML
+> model can't edit this site's structured content) — both have been removed
+> (branches, deploys, and infra plumbing). See [`VERSIONS.md`](./VERSIONS.md) for
+> the current, owner-facing guide to the live versions. The plan below is kept
+> for historical context.
+>
+> **WordPress (`cms/wordpress`), added after the original four.** A SQLite-backed
+> WordPress that serves the same React bundle, with editable copy in a custom
+> **Site Copy** admin page. Unusually, it does **not** bake a custom server: the
+> serving container is the **unmodified upstream `wordpress` image**, and a
+> custom prep/init image seeds the PVC (theme + built bundle + SQLite drop-in)
+> and runs `wp core install`. Theme/code is owned by the prep job; content lives
+> in SQLite. See the `cms/wordpress` branch `CMS-NOTES.md`.
 
 Plan for standing up **four independent CMS variants** of
 `weeeeeiserbikes.staging.tripoli.systems`, each on its own branch and its own
