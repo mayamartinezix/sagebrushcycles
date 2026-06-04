@@ -59,6 +59,21 @@ else
   echo "[sagebrush] WordPress already installed on the volume — preserving content."
 fi
 
+# Re-assert the admin password from the Secret on EVERY run (idempotent), not
+# just at install. Without this, if the wordpress-admin Secret wasn't populated
+# at first install (e.g. ESO hadn't synced yet), the admin password stays the
+# random fallback forever, because `core install` is skipped on later boots.
+# Now, once the Secret is readable, the next prep run sets the intended password.
+if [ -n "${WORDPRESS_ADMIN_PASSWORD:-}" ]; then
+  if wp user update "$ADMIN_USER" --user_pass="$WORDPRESS_ADMIN_PASSWORD" --skip-email >/dev/null 2>&1; then
+    echo "[sagebrush] admin password re-asserted from Secret for '${ADMIN_USER}'"
+  else
+    echo "[sagebrush] WARN: could not set admin password (is user '${ADMIN_USER}' present?)"
+  fi
+else
+  echo "[sagebrush] WORDPRESS_ADMIN_PASSWORD unset — leaving existing admin password as-is"
+fi
+
 # Idempotent settings + ensure our theme is active (cheap on every run).
 wp option update home "$SITE_URL"      >/dev/null
 wp option update siteurl "$SITE_URL"   >/dev/null
