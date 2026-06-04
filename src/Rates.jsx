@@ -21,7 +21,7 @@ const RATES_FALLBACK = [
     name: 'Bike rack',
     price: '+ $20',
     unit: 'adventures everywhere you go',
-    desc: 'Want a great rack? We got you.', 
+    desc: 'Need a great rack? We can handle that for you.', 
     
   },
 ];
