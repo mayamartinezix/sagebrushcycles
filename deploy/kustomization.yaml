@@ -1,14 +1,14 @@
 ---
-# Manifest bundle for weeeeeiserbikes-grav.staging.tripoli.systems (Grav variant).
+# Manifest bundle for weeeeeiserbikes-wordpress.staging.tripoli.systems
+# (WordPress + SQLite variant: vanilla serving image + custom prep initContainer).
 #
 # This directory is NOT applied from git. CI (.github/workflows/build-deploy.yml)
-# substitutes the freshly-built image digest into deployment.yaml, then
+# substitutes the freshly-built PREP image digest into deployment.yaml, then
 # `flux push artifact`s this tree to oci://ghcr.io/licenseplated/sagebrushcycles-deploy
-# (tags: grav-<sha> + moving `grav-preview`). rumi's OCIRepository/Kustomization
-# `weeeeeiserbikes-grav` (apps/weeeeeiserbikes-grav/ in the rumi repo) pulls
-# `grav-preview` and applies it; a Flux Receiver fronted by
-# flux-webhook.staging.tripoli.systems triggers an immediate pull on each push
-# (the OCIRepository interval is the fallback).
+# (tags: wordpress-<sha> + moving `wordpress-preview`). rumi's OCIRepository/
+# Kustomization `weeeeeiserbikes-wordpress` pulls `wordpress-preview` and applies
+# it; a Flux Receiver fronted by flux-webhook.staging.tripoli.systems triggers an
+# immediate pull on each push (the OCIRepository interval is the fallback).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
@@ -18,3 +18,14 @@ resources:
   - deployment.yaml
   - service.yaml
   - httproute.yaml
+
+# wp-config.php (single source, also baked into the prep image) is delivered to
+# the vanilla serving container as a ConfigMap. Stable name (no hash suffix) so
+# deployment.yaml can reference it directly.
+configMapGenerator:
+  - name: wordpress-config
+    namespace: weeeeeiserbikes-wordpress
+    files:
+      - wp-config.php
+generatorOptions:
+  disableNameSuffixHash: true

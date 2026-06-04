@@ -1,105 +1,71 @@
-# Sagebrush Cycle — Grav CMS variant (cms/grav branch).
+# Sagebrush Cycle — WordPress (SQLite) variant (cms/wordpress branch).
 #
-# Two stages:
-#   1. node:22-alpine builds the static React-on-globals bundle from src/ into
-#      /app/public (same build.mjs as the static variant — app.js is
-#      content-free and reads window.SB_CONTENT at runtime).
-#   2. php:8.3-apache installs a pinned Grav + Admin plugin, drops in the custom
-#      `sagebrush` theme + home page (content in its frontmatter), and copies
-#      the built static assets into the theme's site/ dir. The theme template
-#      injects window.SB_CONTENT from the page header, so editing the page in
-#      Grav admin (/admin) changes the rendered site.
+# This builds the PREP/INIT image only. The SERVING container is the unmodified
+# upstream `wordpress` image (see deploy/deployment.yaml) — we deliberately do
+# NOT bake a custom server, so WordPress upgrades by bumping the vanilla tag.
+# This image carries OUR code (theme + built React bundle + vendored SQLite
+# plugin + db.php drop-in) and, run as an initContainer, preps the shared PVC:
+# copies that code onto it and runs `wp core install` against SQLite. Content
+# then lives in the SQLite DB on the PVC, owned by WordPress (see prep-entrypoint.sh).
 #
-# Target URL: https://weeeeeiserbikes-grav.staging.tripoli.systems/
+# Target URL: https://weeeeeiserbikes-wordpress.staging.tripoli.systems/
 
-# ── Stage 1: build the static bundle ───────────────────────────────────────
+# ── Stage 1: build the static React bundle ─────────────────────────────────
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
-# /app/public now holds: app.js, colors_and_type.css, site.css, assets/, fonts/
-# (we do NOT use the generated content.js — Grav injects SB_CONTENT itself).
+# /app/public now holds app.js, colors_and_type.css, site.css, assets/, fonts/
+# (content.js is not used — WordPress injects window.SB_CONTENT from the theme).
 
-# ── Stage 2: Grav on php:8.3-apache ─────────────────────────────────────────
-FROM php:8.3-apache
+# ── Stage 2: prep image (vanilla wordpress + wp-cli + our seed) ─────────────
+FROM wordpress:6.7-php8.3-apache
 
-# Pinned Grav release (stable 1.7 line). Bump deliberately.
-ARG GRAV_VERSION=1.7.52
+ARG WP_CLI_VERSION=2.11.0
 
-# Admin account settings. The account is created at RUNTIME by the entrypoint
-# (not baked into the image), so the password lives only in the injected env.
-# In k8s, GRAV_ADMIN_PASSWORD comes from the grav-admin Secret (Vault
-# kv/grav-admin) and overrides this default; the default below only makes a
-# bare `docker run` usable locally.
-ENV GRAV_ADMIN_USER=admin \
-    GRAV_ADMIN_EMAIL=admin@sagebrushcycle.co \
-    GRAV_ADMIN_PASSWORD=ChangeMe-Sagebrush-Staging-2026! \
-    GRAV_ADMIN_FULLNAME="Sagebrush Admin"
+# Admin account is created at RUNTIME by the prep entrypoint from the injected
+# WORDPRESS_ADMIN_PASSWORD (k8s: the wordpress-admin Secret, Vault
+# kv/wordpress-admin). The default below only makes a bare local run usable.
+ENV WORDPRESS_ADMIN_USER=admin \
+    WORDPRESS_ADMIN_EMAIL=admin@sagebrushcycle.co \
+    WORDPRESS_ADMIN_PASSWORD=ChangeMe-Sagebrush-Staging-2026! \
+    WORDPRESS_SITE_URL=http://localhost:8094
 
-# System libs + PHP extensions Grav needs (gd, zip), plus opcache for perf.
+# WP-CLI (the prep entrypoint installs WordPress with it; no wp-cli ships in the
+# vanilla serving image, which is fine — it never installs).
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-      libzip-dev libpng-dev libjpeg-dev libfreetype6-dev unzip ca-certificates; \
-    docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    docker-php-ext-install -j"$(nproc)" gd zip opcache; \
-    a2enmod rewrite headers; \
-    rm -rf /var/lib/apt/lists/*
+    curl -fsSL -o /usr/local/bin/wp \
+      "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar"; \
+    chmod +x /usr/local/bin/wp; \
+    wp --allow-root --version
 
-# Apache: serve Grav from /var/www/html, allow .htaccess overrides (Grav ships
-# its own .htaccess with the security/rewrite rules), quiet the FQDN warning.
+# The vanilla image keeps WP core in /usr/src/wordpress and copies it to the
+# docroot via ITS entrypoint. We override the entrypoint (prep), so populate the
+# docroot at build time — wp-cli needs core present to run `core install`.
 RUN set -eux; \
-    sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf; \
-    printf 'ServerName localhost\n' >> /etc/apache2/apache2.conf
+    cp -a /usr/src/wordpress/. /var/www/html/; \
+    rm -f /var/www/html/wp-config-docker.php /var/www/html/wp-config-sample.php
 
-# Fetch + unpack the pinned Grav + Admin bundle.
-RUN set -eux; \
-    curl -fsSL -o /tmp/grav.zip \
-      "https://github.com/getgrav/grav/releases/download/${GRAV_VERSION}/grav-admin-v${GRAV_VERSION}.zip"; \
-    unzip -q /tmp/grav.zip -d /tmp/grav; \
-    rm -f /tmp/grav.zip; \
-    rm -rf /var/www/html; \
-    mv /tmp/grav/grav-admin /var/www/html
+# wp-config used by wp-cli here (and mounted into the serving container too, via
+# a ConfigMap generated from this same file — single source of truth).
+COPY deploy/wp-config.php /var/www/html/wp-config.php
 
-WORKDIR /var/www/html
+# Seed: our code, staged for the prep entrypoint to copy onto the PVC.
+COPY wordpress/theme/sagebrush/                    /usr/src/sagebrush-seed/themes/sagebrush/
+COPY wordpress/plugin/sqlite-database-integration/ /usr/src/sagebrush-seed/plugins/sqlite-database-integration/
+COPY wordpress/db.php                              /usr/src/sagebrush-seed/db.php
+# The built static bundle goes into the seed theme's site/ dir (<base href> →
+# /wp-content/themes/sagebrush/site/).
+COPY --from=build /app/public/app.js              /usr/src/sagebrush-seed/themes/sagebrush/site/app.js
+COPY --from=build /app/public/colors_and_type.css /usr/src/sagebrush-seed/themes/sagebrush/site/colors_and_type.css
+COPY --from=build /app/public/site.css            /usr/src/sagebrush-seed/themes/sagebrush/site/site.css
+COPY --from=build /app/public/assets              /usr/src/sagebrush-seed/themes/sagebrush/site/assets
+COPY --from=build /app/public/fonts               /usr/src/sagebrush-seed/themes/sagebrush/site/fonts
 
-# Custom theme + home page + config overrides.
-COPY grav/theme/sagebrush/ /var/www/html/user/themes/sagebrush/
-COPY grav/pages/01.home/sagebrush.md /var/www/html/user/pages/01.home/sagebrush.md
-COPY grav/config/system.yaml /var/www/html/user/config/system.yaml
-COPY grav/config/site.yaml /var/www/html/user/config/site.yaml
-# Page blueprint must live under a pages/ subfolder to be in the
-# blueprints://pages/ stream. Ship it in the canonical user/blueprints/pages/
-# location too (most reliably scanned) so the admin renders the Site Copy form
-# fields instead of the raw frontmatter editor. (user/blueprints is not PVC-
-# mounted, so it stays from the image.)
-COPY grav/theme/sagebrush/blueprints/pages/sagebrush.yaml /var/www/html/user/blueprints/pages/sagebrush.yaml
+COPY wordpress/prep-entrypoint.sh /usr/local/bin/sagebrush-prep.sh
+RUN chmod +x /usr/local/bin/sagebrush-prep.sh
 
-# Drop the stock quark home page so '/' renders via the sagebrush template.
-RUN rm -f /var/www/html/user/pages/01.home/default.md
-
-# Copy the built static bundle into the theme's site/ dir. <base href> in the
-# template points here: /user/themes/sagebrush/site/.
-COPY --from=build /app/public/app.js              /var/www/html/user/themes/sagebrush/site/app.js
-COPY --from=build /app/public/colors_and_type.css /var/www/html/user/themes/sagebrush/site/colors_and_type.css
-COPY --from=build /app/public/site.css            /var/www/html/user/themes/sagebrush/site/site.css
-COPY --from=build /app/public/assets              /var/www/html/user/themes/sagebrush/site/assets
-COPY --from=build /app/public/fonts               /var/www/html/user/themes/sagebrush/site/fonts
-
-# Clear caches + fix ownership for the apache user. The admin account is NOT
-# created here — the entrypoint creates it at runtime from the injected
-# password, so no credential is baked into the image.
-RUN set -eux; \
-    php bin/grav clearcache; \
-    chown -R www-data:www-data /var/www/html
-
-# Entrypoint creates the admin account on first boot (from $GRAV_ADMIN_PASSWORD)
-# and fixes ownership of the PVC-mounted user/ dirs, then hands off to Apache.
-COPY grav/docker-entrypoint.sh /usr/local/bin/sagebrush-entrypoint.sh
-RUN chmod +x /usr/local/bin/sagebrush-entrypoint.sh
-
-EXPOSE 80
-ENTRYPOINT ["/usr/local/bin/sagebrush-entrypoint.sh"]
-CMD ["apache2-foreground"]
+# Runs to completion (preps the PVC) and exits — it's an initContainer, not a server.
+ENTRYPOINT ["/usr/local/bin/sagebrush-prep.sh"]

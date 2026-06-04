@@ -7,3 +7,7 @@ public
 deploy
 README.md
 *.swp
+
+# …but the prep image bakes wp-config.php (single source, also used to generate
+# the serving container's ConfigMap), so let that one file through.
+!deploy/wp-config.php

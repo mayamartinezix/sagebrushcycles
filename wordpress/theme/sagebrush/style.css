@@ -1,0 +1,15 @@
+/*
+Theme Name: Sagebrush Cycle
+Theme URI: https://weeeeeiserbikes-wordpress.staging.tripoli.systems/
+Author: Sagebrush Cycle
+Description: Single-page theme for the Sagebrush Cycle bike-rental site. Serves
+  the prebuilt React-on-globals bundle (app.js) from this theme's site/ dir and
+  injects window.SB_CONTENT from the "Site Copy" admin page. app.js is
+  content-free and renders whatever SB_CONTENT it finds — identical to the other
+  Sagebrush variants. This file only carries the WordPress theme header; the
+  real markup lives in front-page.php / index.php (see functions.php).
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 8.1
+License: UNLICENSED
+*/

@@ -1,24 +1,26 @@
 name: build-deploy
 
-# VARIANT BRANCH: cms/grav — Grav CMS overlay.
+# VARIANT BRANCH: cms/wordpress — WordPress (SQLite) variant.
 #
-# Same pipeline as main, parameterized for this variant: build the Grav image
-# (php:8.3-apache + Grav + Admin, with the prebuilt static React bundle baked
-# into the sagebrush theme), push it to ghcr with variant-prefixed tags, render
-# the digest-pinned deploy bundle, push it as a Flux OCI artifact (tag
-# `grav-preview`), then ping rumi's Flux Receiver for the -grav subdomain.
+# Same pipeline as main, parameterized for this variant: build the WordPress
+# image (wordpress:php8.3-apache + the SQLite Database Integration drop-in, with
+# the prebuilt static React bundle baked into the sagebrush theme), push it to
+# ghcr with variant-prefixed tags, render the digest-pinned deploy bundle, push
+# it as a Flux OCI artifact (tag `wordpress-preview`), then ping rumi's Flux
+# Receiver for the -wordpress subdomain.
 #
-# rumi side: apps/weeeeeiserbikes-grav/ in the rumi repo holds the
-# OCIRepository (tracks `sagebrushcycles-deploy:grav-preview`), Kustomization,
-# and generic-hmac Receiver fronted by flux-webhook.staging.tripoli.systems.
+# rumi side: apps/weeeeeiserbikes-wordpress/ in the rumi repo holds the
+# OCIRepository (tracks `sagebrushcycles-deploy:wordpress-preview`),
+# Kustomization, and generic-hmac Receiver fronted by
+# flux-webhook.staging.tripoli.systems.
 #
 # Required repo secrets (optional — falls back to the OCIRepository poll):
-#   RUMI_FLUX_WEBHOOK_URL_GRAV    Receiver URL incl. the /hook/<token> path.
-#   RUMI_FLUX_WEBHOOK_TOKEN_GRAV  HMAC token (same value in Vault kv/flux-webhook-grav).
+#   RUMI_FLUX_WEBHOOK_URL_WORDPRESS    Receiver URL incl. the /hook/<token> path.
+#   RUMI_FLUX_WEBHOOK_TOKEN_WORDPRESS  HMAC token (same value in Vault kv/flux-webhook-wordpress).
 
 on:
   push:
-    branches: [cms/grav]
+    branches: [cms/wordpress]
     paths:
       - "src/**"
       - "build.mjs"
@@ -26,7 +28,7 @@ on:
       - "package-lock.json"
       - "Dockerfile"
       - ".dockerignore"
-      - "grav/**"
+      - "wordpress/**"
       - "deploy/**"
       - ".github/workflows/build-deploy.yml"
   workflow_dispatch:
@@ -40,7 +42,7 @@ permissions:
   packages: write
 
 env:
-  VARIANT: grav
+  VARIANT: wordpress
   IMAGE_REPO: ghcr.io/licenseplated/sagebrushcycles
   DEPLOY_REPO: ghcr.io/licenseplated/sagebrushcycles-deploy
   FLUX_VERSION: "2.8.6"
@@ -102,12 +104,12 @@ jobs:
 
       - name: Trigger rumi Flux Receiver
         env:
-          WEBHOOK_URL: ${{ secrets.RUMI_FLUX_WEBHOOK_URL_GRAV }}
-          WEBHOOK_TOKEN: ${{ secrets.RUMI_FLUX_WEBHOOK_TOKEN_GRAV }}
+          WEBHOOK_URL: ${{ secrets.RUMI_FLUX_WEBHOOK_URL_WORDPRESS }}
+          WEBHOOK_TOKEN: ${{ secrets.RUMI_FLUX_WEBHOOK_TOKEN_WORDPRESS }}
         run: |
           set -euo pipefail
           if [ -z "${WEBHOOK_URL:-}" ] || [ -z "${WEBHOOK_TOKEN:-}" ]; then
-            echo "RUMI_FLUX_WEBHOOK_URL_GRAV / _TOKEN_GRAV not set — rumi picks this up on the OCIRepository poll interval."
+            echo "RUMI_FLUX_WEBHOOK_URL_WORDPRESS / _TOKEN_WORDPRESS not set — rumi picks this up on the OCIRepository poll interval."
             exit 0
           fi
           payload='{}'

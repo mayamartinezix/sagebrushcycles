@@ -1,14 +1,16 @@
 ---
-# Persists Grav's mutable data (user/{pages,accounts,config,data}) so admin
-# edits survive pod restarts. The theme (incl. the React app.js bundle) stays
-# in the image — NOT on the PVC — so theme/app updates from new image builds
-# still take effect. Uses the cluster's default local-path storageclass
+# Persists WordPress's mutable data so admin edits + uploads survive pod
+# restarts: the SQLite DB (wp-content/database/.ht.sqlite — pages, accounts, and
+# the Site Copy option) and media (wp-content/uploads). WordPress core, the
+# theme (incl. the React app.js bundle), the plugins, and the SQLite db.php
+# drop-in all stay in the image — NOT on the PVC — so they update with each
+# image build. Uses the cluster's default local-path storageclass
 # (WaitForFirstConsumer: binds when the pod schedules).
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: weeeeeiserbikes-grav-data
-  namespace: weeeeeiserbikes-grav
+  name: weeeeeiserbikes-wordpress-data
+  namespace: weeeeeiserbikes-wordpress
 spec:
   accessModes:
     - ReadWriteOnce
