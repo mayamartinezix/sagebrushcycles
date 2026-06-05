@@ -43,7 +43,7 @@ const RATES = [
 function Rates() {
   // Dynamically split the rates array based on functionality
   const bikeRates = RATES.filter(r => r.icon === 'bike' || r.icon === 'sun');
-  const shuttleRates = RATES.filter(r => r.icon === 'car' || r.icon === 'phone');
+  const shuttleRates = RATES.filter(r => r.icon === 'car' || r.icon === 'CutePhone');
 
   // Helper function to render an individual rate card to keep code DRY
   const renderCard = (r) => (
