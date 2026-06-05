@@ -38,29 +38,47 @@ const RATES = [
     unit: 'Anywhere you want',
     desc: 'Shift happens but we got you!',
   },
-  
 ];
 
 function Rates() {
+  // Dynamically split the rates array based on functionality
+  const bikeRates = RATES.filter(r => r.icon === 'bike' || r.icon === 'sun');
+  const shuttleRates = RATES.filter(r => r.icon === 'car' || r.icon === 'phone');
+
+  // Helper function to render an individual rate card to keep code DRY
+  const renderCard = (r) => (
+    <div className={`sb-rate ${r.tag ? 'has-tag' : ''}`} key={r.name}>
+      {r.tag && <span className="sb-rate__tag">{r.tag}</span>}
+      <img className="sb-rate__icon" src={`${ASSETS}/${r.icon}.svg`} alt="" />
+      <h3 className="sb-rate__name">{r.name}</h3>
+      <p className="sb-rate__price">{r.price}<span> / {r.unit}</span></p>
+      <p className="sb-rate__desc">{r.desc}</p>
+    </div>
+  );
+
   return (
     <section className="sb-rates" id="rates">
       <h2 className="sb-section__title">Rates that won't tire you out</h2>
       <p className="sb-section__sub">Helmet, lock, and a little trail map come with every bike — that's just how we roll.</p>
-<div className="sb-rates__grid">
-        {RATES.map((r) => 
-  (
-          <div className={`sb-rate ${r.tag ? 'has-tag' : ''}`} key={r.name}>
-            
-            {r.tag && <span className="sb-rate__tag">{r.tag}</span>}
-            
-            <img className="sb-rate__icon" src={`${ASSETS}/${r.icon}.svg`} alt="" />
-            <h3 className="sb-rate__name">{r.name}</h3>
-            <p className="sb-rate__price">{r.price}<span> / {r.unit}</span></p>
-            <p className="sb-rate__desc">{r.desc}</p>
-          </div>
-        )
-                  )
-        }
+
+      {/* Bike Rental Section */}
+      <div className="sb-rates__section" style={{ marginBottom: '3rem' }}>
+        <h3 className="sb-rates__group-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'inherit' }}>
+          Bike Rentals
+        </h3>
+        <div className="sb-rates__grid">
+          {bikeRates.map(renderCard)}
+        </div>
+      </div>
+
+      {/* Shuttle Service Section */}
+      <div className="sb-rates__section">
+        <h3 className="sb-rates__group-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'inherit' }}>
+          Shuttle Services
+        </h3>
+        <div className="sb-rates__grid">
+          {shuttleRates.map(renderCard)}
+        </div>
       </div>
     </section>
   );
