@@ -1,5 +1,4 @@
-* global React, Button, Field, Segmented, TimePicker, ASSETS */
-
+/* global React, Button, Field, Segmented, TimePicker, ASSETS */
 
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
@@ -13,13 +12,14 @@ const MULTI_MAX_DAYS = 7;
 const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;
 
 function RentalForm({ formRef }) {
-  const [data, setData] = useState({
+  // FIXED: Using React.useState directly to avoid ReferenceErrors
+  const [data, setData] = React.useState({
     name: '', phone: '', plan: 'half',
     pday: '', ptime: '', dday: '', dtime: '',
-    shuttleNeeded: 'no',      // Added track state for toggle
-    shuttleType: 'council',   // Added track state for route options
+    shuttleNeeded: 'no',      
+    shuttleType: 'council',   
   });
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = React.useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
 
   const today = isoToday();
@@ -65,7 +65,7 @@ function RentalForm({ formRef }) {
     const m = toMin(data.ptime) + HALF_LENGTH;
     dropBy = `${fmtMin(m)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`;
   } else if (data.plan === 'full') {
-    dropBy = `Any Time Same Day`;
+    dropBy = `${fmtMin(SHOP_CLOSE)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`; // FIXED: Improved UX string
   }
 
   const baseOk = data.name.trim() && data.phone.trim() && data.pday && data.ptime;
@@ -87,7 +87,6 @@ function RentalForm({ formRef }) {
               ? <React.Fragment>, back by <strong>{prettyTime(data.dtime)}</strong> on <strong>{prettyDay(data.dday)}</strong></React.Fragment>
               : <React.Fragment>, due back <strong>{dropBy.replace(/ \(.*\)$/, '')}</strong></React.Fragment>}.
             
-            {/* Contextual verification sentence for text wrap logic */}
             {data.shuttleNeeded === 'yes' && (
               <>
                 {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong> added to your request.
@@ -143,7 +142,7 @@ function RentalForm({ formRef }) {
             <div className="sb-form__row">
               <Field label="Day" name="pday" type="date" min={today}
                 value={data.pday} onChange={choosePday} />
-              <TimePicker label="Time" value={data.ptime} onChange={set('ptime')}
+              <TimePicker label="Time" value={data.ptime || "08:00"} onChange={set('ptime')}
                 minMinutes={SHOP_OPEN} maxMinutes={pickupMax} />
             </div>
           </div>
@@ -157,7 +156,7 @@ function RentalForm({ formRef }) {
                   max={data.pday ? addDays(data.pday, MULTI_MAX_DAYS - 1) : undefined}
                   disabled={!data.pday}
                   value={data.dday} onChange={set('dday')} />
-                <TimePicker label="Time" value={data.dtime} onChange={set('dtime')}
+                <TimePicker label="Time" value={data.dtime || "10:00"} onChange={set('dtime')}
                   minMinutes={SHOP_OPEN} maxMinutes={SHOP_CLOSE} />
               </div>
               {!data.pday && <span className="sb-field__hint">Pick a pick-up day first.</span>}
@@ -173,7 +172,7 @@ function RentalForm({ formRef }) {
             </div>
           )}
 
-          {/* New Shuttle Toggle Options */}
+          {/* Shuttle Toggle Options */}
           <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
             <span className="sb-field__label">Need a shuttle transport?</span>
             <Segmented
@@ -219,7 +218,13 @@ function RentalForm({ formRef }) {
 }
 
 /* ---------- helpers ---------- */
-function toMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+// FIXED: Added defensive fallback string handling to prevent crashes on undefined/empty values
+function toMin(t) { 
+  if (!t || typeof t !== 'string' || !t.includes(':')) return SHOP_OPEN;
+  const [h, m] = t.split(':').map(Number); 
+  return h * 60 + m; 
+}
+
 function fmtMin(min) {
   const h = Math.floor(min / 60), m = min % 60;
   const ap = h >= 12 ? 'pm' : 'am';
