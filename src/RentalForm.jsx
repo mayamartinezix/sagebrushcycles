@@ -107,6 +107,18 @@ function RentalForm({ formRef }) {
 
   return (
     <section className="sb-form-wrap" id="reserve" ref={formRef}>
+      {/* INJECTED CSS FOR EVEN SPACING */}
+      <style>{`
+        .shuttle-segmented {
+          display: flex !important;
+          width: 100% !important;
+        }
+        .shuttle-segmented > * {
+          flex: 1 !important;
+          text-align: center;
+        }
+      `}</style>
+
       <div className="sb-form-card">
         <h2 className="sb-section__title">Reserve a bike</h2>
         <p className="sb-section__sub">
@@ -176,6 +188,7 @@ function RentalForm({ formRef }) {
           <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
             <span className="sb-field__label">Need a shuttle transport?</span>
             <Segmented
+              className="shuttle-segmented" /* <-- Added CSS Class hook */
               value={data.shuttleNeeded}
               onChange={set('shuttleNeeded')}
               options={[
@@ -190,6 +203,7 @@ function RentalForm({ formRef }) {
             <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
               <span className="sb-field__label">Shuttle Option</span>
               <Segmented
+                className="shuttle-segmented" /* <-- Added CSS Class hook */
                 value={data.shuttleType}
                 onChange={set('shuttleType')}
                 options={[
@@ -218,7 +232,6 @@ function RentalForm({ formRef }) {
 }
 
 /* ---------- helpers ---------- */
-// FIXED: Added defensive fallback string handling to prevent crashes on undefined/empty values
 function toMin(t) { 
   if (!t || typeof t !== 'string' || !t.includes(':')) return SHOP_OPEN;
   const [h, m] = t.split(':').map(Number); 
