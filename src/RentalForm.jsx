@@ -1,4 +1,4 @@
-/* global React, Button, Field, Segmented, TimePicker, ASSETS */
+* global React, Button, Field, Segmented, TimePicker, ASSETS */
 
 /* ====== Rental rules — edit these to change pricing & cutoffs ======
    Times are minutes since midnight (8 * 60 = 8:00am). */
@@ -17,6 +17,8 @@ function RentalForm({ formRef }) {
   const [data, setData] = useState({
     name: '', phone: '', plan: 'half',
     pday: '', ptime: '', dday: '', dtime: '',
+    shuttleNeeded: 'no',      // Added track state for toggle
+    shuttleType: 'council',   // Added track state for route options
   });
   const [sent, setSent] = useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
@@ -85,7 +87,15 @@ function RentalForm({ formRef }) {
             {data.plan === 'multi'
               ? <React.Fragment>, back by <strong>{prettyTime(data.dtime)}</strong> on <strong>{prettyDay(data.dday)}</strong></React.Fragment>
               : <React.Fragment>, due back <strong>{dropBy.replace(/ \(.*\)$/, '')}</strong></React.Fragment>}.
-            {' '}Estimated total <strong>${total}</strong>. We'll text you at{' '}
+            
+            {/* Contextual verification sentence for text wrap logic */}
+            {data.shuttleNeeded === 'yes' && (
+              <>
+                {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong> added to your request.
+              </>
+            )}
+
+            {' '}Estimated bike total <strong>${total}</strong>. We'll text you at{' '}
             <strong>{data.phone}</strong> to confirm — usually within the hour.
           </p>
           <p className="sb-confirm__sign">Happy trails — wheel see you soon!</p>
@@ -164,7 +174,35 @@ function RentalForm({ formRef }) {
             </div>
           )}
 
-          <div className="sb-total">
+          {/* New Shuttle Toggle Options */}
+          <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
+            <span className="sb-field__label">Need a shuttle transport?</span>
+            <Segmented
+              value={data.shuttleNeeded}
+              onChange={set('shuttleNeeded')}
+              options={[
+                { value: 'no', label: 'No shuttle', sub: 'Self pick up/drop off' },
+                { value: 'yes', label: 'Yes, please', sub: 'Add shuttle service' },
+              ]}
+            />
+          </div>
+
+          {/* Conditional Sub-options for Custom vs Council */}
+          {data.shuttleNeeded === 'yes' && (
+            <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
+              <span className="sb-field__label">Shuttle Option</span>
+              <Segmented
+                value={data.shuttleType}
+                onChange={set('shuttleType')}
+                options={[
+                  { value: 'council', label: 'Council-Cambridge', sub: 'Standard local routes' },
+                  { value: 'custom', label: 'Custom Route', sub: 'Coordinate custom stop' },
+                ]}
+              />
+            </div>
+          )}
+
+          <div className="sb-total" style={{ marginTop: '1.5rem' }}>
             <span className="sb-total__label">{totalLabel}</span>
             <span className="sb-total__amount">{total != null ? `$${total}` : 'Pick dates'}</span>
           </div>
