@@ -27,6 +27,11 @@ const RATES = [
   },
 ];
 
+function Rates() {
+  return (
+    <section className="sb-rates" id="rates">
+      <h2 className="sb-section__title">Rates that won't tire you out</h2>
+      <p className="sb-section__sub">Helmet, lock, and a little trail map come with every bike — that's just how we roll.</p>
 <div className="sb-rates__grid">
         {RATES.map((r) => 
   (
