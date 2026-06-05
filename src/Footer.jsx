@@ -13,12 +13,12 @@ function Footer() {
           </div>
           <div className="sb-footer__col">
             <h4>Open</h4>
-            <p>Thu–Mon · 8am–6pm<br />Closed Tue & Wed</p>
+            <p>Open Every Day! <br /> By Appointment </p>
           </div>
           <div className="sb-footer__col">
             <h4>Say hi</h4>
             <p>
-              <a href="tel:+12085550148">(208) 555-0148</a><br />
+              <a href="tel:+12085499099">(208) 549 9099</a><br />
               <a href="mailto:hello@sagebrushcycle.co">hello@sagebrushcycle.co</a>
             </p>
           </div>
