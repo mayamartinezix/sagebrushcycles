@@ -42,7 +42,16 @@ src/  ──(npm run build / build.mjs)──>  public/  ──(Dockerfile)─�
 3. Copies `colors_and_type.css`, `site.css`, `assets/`, `fonts/`, and writes a
    generated `public/index.html` (links the CSS + `app.js`, `#root` div).
 
-Local preview: `npm install && npm run preview` → http://localhost:8080.
+Local preview: `npm install && npm run preview` → http://localhost:8080 (one-shot
+build + serve).
+
+Dev mode: `npm run dev` (`dev.mjs`) builds + serves `public/` and watches `src/`,
+rebuilding and live-reloading the browser on every save. It calls the same
+exported `build({dev:true})` from `build.mjs` — the only difference is a tiny
+`EventSource('/__livereload')` snippet appended to `index.html`, which the dev
+server pings (server-sent event) after each rebuild. That hook is **dev-only**;
+`npm run build` / the Dockerfile never include it. Port via `PORT` env
+(default 8080). Zero new deps — `dev.mjs` is plain Node + esbuild.
 
 ### Notable details
 

@@ -12,9 +12,10 @@
 import esbuild from "esbuild";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const SRC = "src";
-const OUT = "public";
+export const SRC = "src";
+export const OUT = "public";
 const VENDOR = path.join(SRC, "vendor");
 
 // Order matters: ui.jsx defines shared bits + ASSETS, the section components
@@ -49,36 +50,45 @@ function copyDir(from, to) {
   }
 }
 
-// Fresh output dir.
-fs.rmSync(OUT, { recursive: true, force: true });
-fs.mkdirSync(OUT, { recursive: true });
+// Build src/ → public/. Returns the list of files written. Pass {dev:true} to
+// have index.html include the live-reload snippet the dev server listens for.
+export function build({ dev = false } = {}) {
+  // Fresh output dir.
+  fs.rmSync(OUT, { recursive: true, force: true });
+  fs.mkdirSync(OUT, { recursive: true });
 
-// ── app.js: vendor libs + transpiled components + the image-slot web component ──
-let js = "";
-for (const v of VENDORS) js += read(path.join(VENDOR, v)) + "\n";
+  // ── app.js: vendor libs + transpiled components + the image-slot web component ──
+  let js = "";
+  for (const v of VENDORS) js += read(path.join(VENDOR, v)) + "\n";
 
-for (const file of COMPONENTS) {
-  const { code } = esbuild.transformSync(read(path.join(SRC, file)), {
-    loader: "jsx",
-    jsx: "transform",
-    jsxFactory: "React.createElement",
-    jsxFragment: "React.Fragment",
-    minify: true,
-  });
-  js += code + "\n";
-}
-// image-slot.js is plain JS (a custom element); ship as-is.
-js += read(path.join(SRC, "image-slot.js")) + "\n";
+  for (const file of COMPONENTS) {
+    const { code } = esbuild.transformSync(read(path.join(SRC, file)), {
+      loader: "jsx",
+      jsx: "transform",
+      jsxFactory: "React.createElement",
+      jsxFragment: "React.Fragment",
+      minify: true,
+    });
+    js += code + "\n";
+  }
+  // image-slot.js is plain JS (a custom element); ship as-is.
+  js += read(path.join(SRC, "image-slot.js")) + "\n";
 
-fs.writeFileSync(path.join(OUT, "app.js"), js);
+  fs.writeFileSync(path.join(OUT, "app.js"), js);
 
-// ── static assets ──
-for (const css of STYLES) fs.copyFileSync(path.join(SRC, css), path.join(OUT, css));
-copyDir(path.join(SRC, "assets"), path.join(OUT, "assets"));
-copyDir(path.join(SRC, "fonts"), path.join(OUT, "fonts"));
+  // ── static assets ──
+  for (const css of STYLES) fs.copyFileSync(path.join(SRC, css), path.join(OUT, css));
+  copyDir(path.join(SRC, "assets"), path.join(OUT, "assets"));
+  copyDir(path.join(SRC, "fonts"), path.join(OUT, "fonts"));
 
-// ── index.html ──
-const html = `<!doctype html>
+  // ── index.html ──
+  // In dev, append a tiny live-reload client; the dev server (dev.mjs) pushes a
+  // server-sent event after each rebuild and the page reloads itself. The
+  // production build never includes this.
+  const liveReload = dev
+    ? `  <script>new EventSource('/__livereload').onmessage=()=>location.reload();</script>\n`
+    : "";
+  const html = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -93,9 +103,15 @@ const html = `<!doctype html>
   <div id="root"></div>
   <!-- Generated bundle — do not edit. Built from src/ by build.mjs. -->
   <script src="app.js"></script>
-</body>
+${liveReload}</body>
 </html>
 `;
-fs.writeFileSync(path.join(OUT, "index.html"), html);
+  fs.writeFileSync(path.join(OUT, "index.html"), html);
 
-console.log("Built public/ →", fs.readdirSync(OUT).join(", "));
+  return fs.readdirSync(OUT);
+}
+
+// Run the build when invoked directly (`node build.mjs` / `npm run build`).
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  console.log("Built public/ →", build().join(", "));
+}
