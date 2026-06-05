@@ -16,7 +16,7 @@ function RentalForm({ formRef }) {
           <img className="sb-confirm__art" src={`${ASSETS}/sun.svg`} alt="" />
           <h2 className="sb-confirm__title">You're all set, {data.name.split(' ')[0]}!</h2>
           <p className="sb-confirm__body">
-            We've got your request for a <strong>{data.plan === 'half' ? 'half day' : 'full day'}</strong> on{' '}
+            We've got your request for a <strong>{data.plan === 'half' ? 'half day' : 'full day' : 'multi day'}</strong> on{' '}
             <strong>{prettyDay(data.day)}</strong> around <strong>{prettyTime(data.time)}</strong>.
             We'll text you at <strong>{data.phone}</strong> to confirm — usually within the hour.
           </p>
