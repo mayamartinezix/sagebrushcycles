@@ -130,8 +130,8 @@ function RentalForm({ formRef }) {
               value={data.plan}
               onChange={choosePlan}
               options={[
-                { value: 'half',  label: 'Half day',  sub: '5 hrs · $30' },
-                { value: 'full',  label: 'Full day',  sub: 'overnight · $45' },
+                { value: 'half',  label: 'Half day',  sub: '4 hrs · $30' },
+                { value: 'full',  label: 'Full day',  sub: 'all day · $45' },
                 { value: 'multi', label: 'Multi-day', sub: '$40 / day' },
               ]}
             />
