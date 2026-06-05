@@ -35,7 +35,6 @@ const RATES = [
     icon: 'CutePhone',
     name: 'Custom Shuttle Service',
     price: 'Call us for a quote',
-    unit: 'Anywhere you want',
     desc: 'Shift happens but we got you!',
   },
 ];
