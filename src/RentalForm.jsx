@@ -46,7 +46,7 @@ function RentalForm({ formRef }) {
             onChange={set('name')} placeholder="First and last" />
 
           <Field label="Phone number" name="phone" type="tel" inputMode="tel"
-            value={data.phone} onChange={set('phone')} placeholder="(208) 555-0148"
+            value={data.phone} onChange={set('phone')} placeholder="(208) 549-9099"
             hint="We'll text you here to confirm." />
 
           <Field label="Address" optional name="address" value={data.address}
@@ -63,8 +63,8 @@ function RentalForm({ formRef }) {
               value={data.plan}
               onChange={set('plan')}
               options={[
-                { value: 'half', label: 'Half day', sub: '$24 · up to 4 hrs' },
-                { value: 'full', label: 'Full day', sub: '$38 · all day' },
+                { value: 'half', label: 'Half day', sub: '$45 · up to 4 hrs' },
+                { value: 'full', label: 'Full day', sub: '$60 · all day' },
               ]}
             />
           </div>
