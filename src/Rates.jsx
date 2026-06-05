@@ -4,24 +4,24 @@ const RATES = [
   {
     icon: 'sun',
     name: 'Half day',
-    price: '$24',
+    price: '$45',
     unit: 'up to 4 hours',
     desc: 'Just right for an easy out-and-back along the river. No spokes about it.',
   },
   {
     icon: 'bike',
     name: 'Full day',
-    price: '$38',
+    price: '$60',
     unit: 'all day, your pace',
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
     popular: true,
   },
   {
     icon: 'car',
-    name: 'Bike rack',
-    price: '+ $20',
-    unit: 'adventures everywhere you go',
-    desc: 'Need a great rack? We can handle that for you.', 
+    name: 'Shuttle service',
+    price: '$20-$40',
+    unit: 'adventures anywhere you want',
+    desc: 'We go the extra mile.', 
     
   },
 ];
