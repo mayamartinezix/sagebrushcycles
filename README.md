@@ -129,4 +129,10 @@ That's it — the robot takes over from here. ✅
   digest-pinned manifest bundle (`…/sagebrushcycles-deploy`) as a Flux OCI
   artifact, and pings the rumi Flux Receiver. Full runbook in the meta-repo at
   `rumi/docs/apps/weeeeeiserbikes.md`.
-- **Local preview:** `npm install && npm run preview` → http://localhost:8080.
+- **Local preview:** `npm install && npm run preview` → http://localhost:8080
+  (one-shot build, then serves it).
+- **Dev mode (live reload):** `npm install && npm run dev` → http://localhost:8080.
+  Watches `src/`, rebuilds on every save, and auto-refreshes the browser — leave
+  it running while you edit. Set `PORT` to use another port
+  (e.g. `PORT=3000 npm run dev`). The live-reload hook is dev-only; it never
+  ships in the production build.
