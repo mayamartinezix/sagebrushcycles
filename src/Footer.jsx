@@ -19,7 +19,7 @@ function Footer() {
             <h4>Say hi</h4>
             <p>
               <a href="tel:+12085499099">(208) 549 9099</a><br />
-              <a href="mailto:hello@sagebrushcycle.co">hello@sagebrushcycle.co</a>
+              <a href="mailto:letsride@sagebrush-cycles.com">letsride@sagebrush-cycles.com</a>
             </p>
           </div>
         </div>
