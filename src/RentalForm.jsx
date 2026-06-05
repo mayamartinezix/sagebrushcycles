@@ -2,7 +2,13 @@
 
 function RentalForm({ formRef }) {
   const [data, setData] = useState({
-    name: '', phone: '', day: '', time: '', plan: 'half',
+    name: '', 
+    phone: '', 
+    day: '', 
+    time: '', 
+    plan: 'half',
+    shuttleNeeded: 'no',      // 'no' or 'yes'
+    shuttleType: 'council',   // 'council' or 'custom'
   });
   const [sent, setSent] = useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
@@ -16,9 +22,17 @@ function RentalForm({ formRef }) {
           <img className="sb-confirm__art" src={`${ASSETS}/sun.svg`} alt="" />
           <h2 className="sb-confirm__title">You're all set, {data.name.split(' ')[0]}!</h2>
           <p className="sb-confirm__body">
-            We've got your request for a <strong>{data.plan === 'half' ? 'half day' : 'full day' : 'multi day'}</strong> on{' '}
+            We've got your request for a <strong>{{half: 'half day', full: 'full day', multi: 'multi day'}[data.plan]}</strong> on{' '}
             <strong>{prettyDay(data.day)}</strong> around <strong>{prettyTime(data.time)}</strong>.
-            We'll text you at <strong>{data.phone}</strong> to confirm — usually within the hour.
+            
+            {/* Added dynamic shuttle confirmation summary */}
+            {data.shuttleNeeded === 'yes' && (
+              <>
+                {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong> included.
+              </>
+            )}
+
+             We'll text you at <strong>{data.phone}</strong> to confirm — usually within the hour.
           </p>
           <p className="sb-confirm__sign">Happy trails — wheel see you soon!</p>
           <Button variant="secondary" onClick={() => { setSent(false); }}>
@@ -66,6 +80,34 @@ function RentalForm({ formRef }) {
               ]}
             />
           </div>
+
+          {/* New Element 1: Shuttle Requirement Toggle */}
+          <div className="sb-form__plan">
+            <span className="sb-field__label">Need a shuttle?</span>
+            <Segmented
+              value={data.shuttleNeeded}
+              onChange={set('shuttleNeeded')}
+              options={[
+                { value: 'no', label: 'No shuttle', sub: 'I will pick up / drop off' },
+                { value: 'yes', label: 'Yes, please', sub: 'Add shuttle transport' },
+              ]}
+            />
+          </div>
+
+          {/* New Element 2: Shuttle Type Selector (Conditionally shown if they picked 'yes') */}
+          {data.shuttleNeeded === 'yes' && (
+            <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
+              <span className="sb-field__label">Shuttle Option</span>
+              <Segmented
+                value={data.shuttleType}
+                onChange={set('shuttleType')}
+                options={[
+                  { value: 'council', label: 'Council-Cambridge', sub: 'Standard local routes' },
+                  { value: 'custom', label: 'Custom Route', sub: 'Coordinate a custom stop' },
+                ]}
+              />
+            </div>
+          )}
 
           <Button variant="primary" type="submit" full disabled={!canSend}>
             Let's get rolling
