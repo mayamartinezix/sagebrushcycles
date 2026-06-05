@@ -55,7 +55,7 @@ function RentalForm({ formRef }) {
 
   const totalLabel =
     data.plan === 'half' ? 'Half day · 5 hours' :
-    data.plan === 'full' ? 'Full day · overnight' :
+    data.plan === 'full' ? 'Full day · All day' :
     days ? `${days} days · $${PRICE.multiDay}/day` : `Multi-day · $${PRICE.multiDay}/day`;
 
   // static "drop off by" line for half / full
@@ -64,8 +64,7 @@ function RentalForm({ formRef }) {
     const m = toMin(data.ptime) + HALF_LENGTH;
     dropBy = `${fmtMin(m)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`;
   } else if (data.plan === 'full') {
-    const day = data.pday ? addDays(data.pday, 1) : '';
-    dropBy = `${fmtMin(RETURN_AM)}${day ? ` · ${dowMonDay(day)}` : ''} (next morning)`;
+    dropBy = `Any Time Same Day`;
   }
 
   const baseOk = data.name.trim() && data.phone.trim() && data.pday && data.ptime;
