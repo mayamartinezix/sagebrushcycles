@@ -1,7 +1,6 @@
 * global React, Button, Field, Segmented, TimePicker, ASSETS */
 
-/* ====== Rental rules — edit these to change pricing & cutoffs ======
-   Times are minutes since midnight (8 * 60 = 8:00am). */
+
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
 const HALF_LENGTH = 5 * 60;    // a half day is 5 hours
