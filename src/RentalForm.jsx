@@ -2,7 +2,7 @@
 
 function RentalForm({ formRef }) {
   const [data, setData] = useState({
-    name: '', phone: '', address: '', day: '', time: '', plan: 'half',
+    name: '', phone: '', day: '', time: '', plan: 'half',
   });
   const [sent, setSent] = useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
@@ -48,9 +48,6 @@ function RentalForm({ formRef }) {
           <Field label="Phone number" name="phone" type="tel" inputMode="tel"
             value={data.phone} onChange={set('phone')} placeholder="(208) 549-9099"
             hint="We'll text you here to confirm." />
-
-          <Field label="Address" optional name="address" value={data.address}
-            onChange={set('address')} placeholder="Only if you'd like a drop-off" />
 
           <div className="sb-form__row">
             <Field label="Day" name="day" type="date" value={data.day} onChange={set('day')} />
