@@ -2,29 +2,43 @@
 
 const RATES = [
   {
-    icon: 'sun',
-    name: 'Half day',
-    price: '$45',
+    icon: 'bike',
+    name: 'Half-day',
+    price: '$30',
     unit: 'up to 4 hours',
     desc: 'Just right for an easy out-and-back along the river. No spokes about it.',
     tag: 'No Need To Brake The Bank',
   },
   {
     icon: 'bike',
-    name: 'Full day',
-    price: '$60',
+    name: 'Full-day',
+    price: '$45',
+    unit: 'all day, your pace',
+    desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
+  },
+  {
+    icon: 'sun',
+    name: 'Multi-day (3+ days)',
+    price: '$40/per day',
     unit: 'all day, your pace',
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
     tag: 'The Wheel Deal',
   },
   {
     icon: 'car',
-    name: 'Shuttle service',
+    name: 'Shuttle Service',
     price: '$20-$40',
-    unit: 'adventures anywhere you want',
+    unit: 'Council-Cambridge',
     desc: 'We go the extra mile.',
-    
   },
+  {
+    icon: 'car',
+    name: 'Custom Shuttle Service',
+    price: 'Call (208) 549 9099 for a quote',
+    unit: 'Anywhere you want',
+    desc: 'Shift happens, we got you!',
+  },
+  
 ];
 
 function Rates() {
