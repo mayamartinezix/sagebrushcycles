@@ -32,9 +32,9 @@ const RATES = [
     desc: 'We go the extra mile.',
   },
   {
-    icon: 'car',
+    icon: 'phone',
     name: 'Custom Shuttle Service',
-    price: 'Call (208) 549 9099 for a quote',
+    price: 'Call us for a quote',
     unit: 'Anywhere you want',
     desc: 'Shift happens, we got you!',
   },
