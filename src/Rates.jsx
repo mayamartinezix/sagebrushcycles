@@ -1,4 +1,5 @@
 /* global React */
+const ASSETS = '/assets/images';
 
 const RATES = [
   {
