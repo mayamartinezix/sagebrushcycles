@@ -19,9 +19,9 @@ const RATES = [
   {
     icon: 'sun',
     name: 'Multi-day (3+ days)',
-    price: '$40/per day',
-    unit: 'all day, your pace',
-    desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
+    price: '$40',
+    unit: 'per day of ex-cycling fun',
+    desc: 'Shift things into high gear.',
     tag: 'The Wheel Deal',
   },
   {
@@ -36,7 +36,7 @@ const RATES = [
     name: 'Custom Shuttle Service',
     price: 'Call us for a quote',
     unit: 'Anywhere you want',
-    desc: 'Shift happens, we got you!',
+    desc: 'Shift happens but we got you!',
   },
   
 ];
