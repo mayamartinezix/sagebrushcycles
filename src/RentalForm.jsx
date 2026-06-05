@@ -1,41 +1,96 @@
-/* global React */
+/* global React, Button, Field, Segmented, TimePicker, ASSETS */
+
+/* ====== Rental rules — edit these to change pricing & cutoffs ======
+   Times are minutes since midnight (8 * 60 = 8:00am). */
+const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
+const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
+const HALF_LENGTH = 5 * 60;    // a half day is 5 hours
+const RETURN_AM   = 10 * 60;   // full & multi-day bikes are due back by 10:00am
+const PRICE = { half: 30, full: 45, multiDay: 40 };  // multiDay is per day
+const MULTI_MIN_DAYS = 2;
+const MULTI_MAX_DAYS = 7;
+
+/* latest a half-day can start and still be back by closing time */
+const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;
 
 function RentalForm({ formRef }) {
   const [data, setData] = useState({
-    name: '', 
-    phone: '', 
-    day: '', 
-    time: '', 
-    plan: 'half',
-    shuttleNeeded: 'no',      // 'no' or 'yes'
-    shuttleType: 'council',   // 'council' or 'custom'
+    name: '', phone: '', plan: 'half',
+    pday: '', ptime: '', dday: '', dtime: '',
   });
   const [sent, setSent] = useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
 
-  const canSend = data.name.trim() && data.phone.trim() && data.day && data.time;
+  const today = isoToday();
+
+  // switching length: drop a pickup time that no longer fits the new length
+  const choosePlan = (plan) => setData((d) => {
+    const next = { ...d, plan };
+    const pmax = plan === 'half' ? HALF_LAST_PICKUP : SHOP_CLOSE;
+    if (d.ptime && toMin(d.ptime) > pmax) next.ptime = '';
+    return next;
+  });
+
+  // changing pickup day: clear a multi-day drop-off that falls outside the window
+  const choosePday = (v) => setData((d) => {
+    const next = { ...d, pday: v };
+    if (d.plan === 'multi' && d.dday) {
+      const lo = addDays(v, MULTI_MIN_DAYS - 1);
+      const hi = addDays(v, MULTI_MAX_DAYS - 1);
+      if (d.dday < lo || d.dday > hi) next.dday = '';
+    }
+    return next;
+  });
+
+  const pickupMax = data.plan === 'half' ? HALF_LAST_PICKUP : SHOP_CLOSE;
+
+  // ----- derived: days, total, drop-off -----
+  const days = (data.plan === 'multi' && data.pday && data.dday)
+    ? daysInclusive(data.pday, data.dday) : 0;
+
+  const total =
+    data.plan === 'half' ? PRICE.half :
+    data.plan === 'full' ? PRICE.full :
+    days ? days * PRICE.multiDay : null;
+
+  const totalLabel =
+    data.plan === 'half' ? 'Half day · 5 hours' :
+    data.plan === 'full' ? 'Full day · overnight' :
+    days ? `${days} days · $${PRICE.multiDay}/day` : `Multi-day · $${PRICE.multiDay}/day`;
+
+  // static "drop off by" line for half / full
+  let dropBy = '';
+  if (data.plan === 'half' && data.ptime) {
+    const m = toMin(data.ptime) + HALF_LENGTH;
+    dropBy = `${fmtMin(m)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`;
+  } else if (data.plan === 'full') {
+    const day = data.pday ? addDays(data.pday, 1) : '';
+    dropBy = `${fmtMin(RETURN_AM)}${day ? ` · ${dowMonDay(day)}` : ''} (next morning)`;
+  }
+
+  const baseOk = data.name.trim() && data.phone.trim() && data.pday && data.ptime;
+  const canSend = data.plan === 'multi'
+    ? baseOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
+    : baseOk;
 
   if (sent) {
+    const planWord = data.plan === 'half' ? 'half-day' : data.plan === 'full' ? 'full-day' : `${days}-day`;
     return (
       <section className="sb-form-wrap" id="reserve" ref={formRef}>
         <div className="sb-confirm">
           <img className="sb-confirm__art" src={`${ASSETS}/sun.svg`} alt="" />
           <h2 className="sb-confirm__title">You're all set, {data.name.split(' ')[0]}!</h2>
           <p className="sb-confirm__body">
-            We've got your request for a <strong>{{half: 'half day', full: 'full day', multi: 'multi day'}[data.plan]}</strong> on{' '}
-            <strong>{prettyDay(data.day)}</strong> around <strong>{prettyTime(data.time)}</strong>.
-            
-            {/* Added dynamic shuttle confirmation summary */}
-            {data.shuttleNeeded === 'yes' && (
-              <>
-                {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong> included.
-              </>
-            )}
-
-             We'll text you at <strong>{data.phone}</strong> to confirm — usually within the hour.
+            We've got your request for a <strong>{planWord}</strong> rental starting{' '}
+            <strong>{prettyDay(data.pday)}</strong> at <strong>{prettyTime(data.ptime)}</strong>
+            {data.plan === 'multi'
+              ? <React.Fragment>, back by <strong>{prettyTime(data.dtime)}</strong> on <strong>{prettyDay(data.dday)}</strong></React.Fragment>
+              : <React.Fragment>, due back <strong>{dropBy.replace(/ \(.*\)$/, '')}</strong></React.Fragment>}.
+            {' '}Estimated total <strong>${total}</strong>. We'll text you at{' '}
+            <strong>{data.phone}</strong> to confirm — usually within the hour.
           </p>
           <p className="sb-confirm__sign">Happy trails — wheel see you soon!</p>
-          <Button variant="secondary" onClick={() => { setSent(false); }}>
+          <Button variant="secondary" onClick={() => setSent(false)}>
             Make another request
           </Button>
         </div>
@@ -52,10 +107,7 @@ function RentalForm({ formRef }) {
           this is just a request, no strings (or chains) attached.
         </p>
 
-        <form
-          className="sb-form"
-          onSubmit={(e) => { e.preventDefault(); if (canSend) setSent(true); }}
-        >
+        <form className="sb-form" onSubmit={(e) => { e.preventDefault(); if (canSend) setSent(true); }}>
           <Field label="Your name" name="name" value={data.name}
             onChange={set('name')} placeholder="First and last" />
 
@@ -63,57 +115,66 @@ function RentalForm({ formRef }) {
             value={data.phone} onChange={set('phone')} placeholder="(208) 549-9099"
             hint="We'll text you here to confirm." />
 
-          <div className="sb-form__row">
-            <Field label="Day" name="day" type="date" value={data.day} onChange={set('day')} />
-            <TimePicker label="Time" value={data.time} onChange={set('time')} />
-          </div>
-
           <div className="sb-form__plan">
             <span className="sb-field__label">How long?</span>
             <Segmented
               value={data.plan}
-              onChange={set('plan')}
+              onChange={choosePlan}
               options={[
-                { value: 'half', label: 'Half day', sub: '$30 · up to 4 hrs' },
-                { value: 'full', label: 'Full day', sub: '$45 · all day' },
-                { value: 'multi', label: 'Multi day', sub: '$40 · all day, 3+ days' },
+                { value: 'half',  label: 'Half day',  sub: '5 hrs · $30' },
+                { value: 'full',  label: 'Full day',  sub: 'overnight · $45' },
+                { value: 'multi', label: 'Multi-day', sub: '$40 / day' },
               ]}
             />
           </div>
 
-          {/* New Element 1: Shuttle Requirement Toggle */}
-          <div className="sb-form__plan">
-            <span className="sb-field__label">Need a shuttle?</span>
-            <Segmented
-              value={data.shuttleNeeded}
-              onChange={set('shuttleNeeded')}
-              options={[
-                { value: 'no', label: 'No shuttle', sub: 'I will pick up / drop off' },
-                { value: 'yes', label: 'Yes, please', sub: 'Add shuttle transport' },
-              ]}
-            />
+          <div className="sb-form__leg">
+            <span className="sb-leg__label">
+              {data.plan === 'multi' ? 'Pick up' : 'When would you like it?'}
+            </span>
+            <div className="sb-form__row">
+              <Field label="Day" name="pday" type="date" min={today}
+                value={data.pday} onChange={choosePday} />
+              <TimePicker label="Time" value={data.ptime} onChange={set('ptime')}
+                minMinutes={SHOP_OPEN} maxMinutes={pickupMax} />
+            </div>
           </div>
 
-          {/* New Element 2: Shuttle Type Selector (Conditionally shown if they picked 'yes') */}
-          {data.shuttleNeeded === 'yes' && (
-            <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
-              <span className="sb-field__label">Shuttle Option</span>
-              <Segmented
-                value={data.shuttleType}
-                onChange={set('shuttleType')}
-                options={[
-                  { value: 'council', label: 'Council-Cambridge', sub: 'Standard local routes' },
-                  { value: 'custom', label: 'Custom Route', sub: 'Coordinate a custom stop' },
-                ]}
-              />
+          {data.plan === 'multi' ? (
+            <div className="sb-form__leg sb-form__leg--drop">
+              <span className="sb-leg__label">Drop off</span>
+              <div className="sb-form__row">
+                <Field label="Day" name="dday" type="date"
+                  min={data.pday ? addDays(data.pday, MULTI_MIN_DAYS - 1) : today}
+                  max={data.pday ? addDays(data.pday, MULTI_MAX_DAYS - 1) : undefined}
+                  disabled={!data.pday}
+                  value={data.dday} onChange={set('dday')} />
+                <TimePicker label="Time" value={data.dtime} onChange={set('dtime')}
+                  minMinutes={SHOP_OPEN} maxMinutes={SHOP_CLOSE} />
+              </div>
+              {!data.pday && <span className="sb-field__hint">Pick a pick-up day first.</span>}
+            </div>
+          ) : (
+            <div className="sb-dropby">
+              <svg className="sb-dropby__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 7.5V12l3 2"></path>
+              </svg>
+              <span>Drop off by <strong>{dropBy || '—'}</strong></span>
             </div>
           )}
+
+          <div className="sb-total">
+            <span className="sb-total__label">{totalLabel}</span>
+            <span className="sb-total__amount">{total != null ? `$${total}` : 'Pick dates'}</span>
+          </div>
 
           <Button variant="primary" type="submit" full disabled={!canSend}>
             Let's get rolling
           </Button>
           <p className="sb-form__fineprint">
-            Helmet & lock included. Must be 18+ to reserve; kids ride with a parent.
+            Helmet &amp; lock included. Must be 18+ to reserve; kids ride with a parent.
           </p>
         </form>
       </div>
@@ -121,17 +182,36 @@ function RentalForm({ formRef }) {
   );
 }
 
+/* ---------- helpers ---------- */
+function toMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+function fmtMin(min) {
+  const h = Math.floor(min / 60), m = min % 60;
+  const ap = h >= 12 ? 'pm' : 'am';
+  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${ap}`;
+}
+function isoToday() {
+  const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+function addDays(iso, n) {
+  const d = new Date(iso + 'T00:00'); d.setDate(d.getDate() + n);
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+function daysInclusive(a, b) {
+  const ms = new Date(b + 'T00:00') - new Date(a + 'T00:00');
+  return Math.round(ms / 86400000) + 1;
+}
+function dowMonDay(iso) {
+  return new Date(iso + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
 function prettyDay(d) {
   if (!d) return '';
-  const dt = new Date(d + 'T00:00');
-  return dt.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  return new Date(d + 'T00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 }
 function prettyTime(t) {
   if (!t) return '';
-  const [h, m] = t.split(':').map(Number);
-  const ap = h >= 12 ? 'pm' : 'am';
-  const hr = ((h + 11) % 12) + 1;
-  return `${hr}:${String(m).padStart(2, '0')} ${ap}`;
+  return fmtMin(toMin(t));
 }
 
 window.RentalForm = RentalForm;

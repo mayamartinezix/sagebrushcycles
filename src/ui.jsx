@@ -18,9 +18,9 @@ function Button({ variant = 'primary', children, onClick, type = 'button', full,
 }
 
 /* ---------- Text field ---------- */
-function Field({ label, optional, hint, type = 'text', value, onChange, placeholder, name, inputMode }) {
+function Field({ label, optional, hint, type = 'text', value, onChange, placeholder, name, inputMode, min, max, disabled }) {
   return (
-    <label className="sb-field">
+    <label className={`sb-field${disabled ? ' is-disabled' : ''}`}>
       <span className="sb-field__label">
         {label}
         {optional && <span className="sb-field__opt"> (optional)</span>}
@@ -30,6 +30,9 @@ function Field({ label, optional, hint, type = 'text', value, onChange, placehol
         type={type}
         name={name}
         value={value}
+        min={min}
+        max={max}
+        disabled={disabled}
         inputMode={inputMode}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -51,7 +54,7 @@ function minsToVal(mins) {
   return `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
 }
 
-function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepMin = 30 }) {
+function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepMin = 30, minMinutes, maxMinutes }) {
   const [open, setOpen] = useState(false);
 
   React.useEffect(() => {
@@ -68,10 +71,13 @@ function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepM
     { name: 'Evening', slots: [] },
   ];
   for (let m = startHour * 60; m <= endHour * 60; m += stepMin) {
+    if (minMinutes != null && m < minMinutes) continue;
+    if (maxMinutes != null && m > maxMinutes) continue;
     const h = Math.floor(m / 60);
     const g = h < 12 ? 0 : h < 17 ? 1 : 2;
     groups[g].slots.push(m);
   }
+  const noSlots = groups.every((g) => !g.slots.length);
 
   return (
     <div className="sb-field sb-tp">
@@ -91,6 +97,7 @@ function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepM
         <React.Fragment>
           <div className="sb-tp__backdrop" onClick={() => setOpen(false)}></div>
           <div className="sb-tp__pop" role="listbox">
+            {noSlots && <p className="sb-tp__empty">No times open — try another day or length.</p>}
             {groups.filter((g) => g.slots.length).map((g) => (
               <div className="sb-tp__group" key={g.name}>
                 <span className="sb-tp__glabel">{g.name}</span>
