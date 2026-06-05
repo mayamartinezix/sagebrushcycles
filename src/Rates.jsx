@@ -32,7 +32,7 @@ const RATES = [
     desc: 'We go the extra mile.',
   },
   {
-    icon: 'phone',
+    icon: 'cutephone',
     name: 'Custom Shuttle Service',
     price: 'Call us for a quote',
     unit: 'Anywhere you want',
