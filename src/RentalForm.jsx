@@ -1,13 +1,5 @@
 /* global React, Button, Field, Segmented, TimePicker, ASSETS, __SPLITFORMS_KEY__ */
 
-<form action="https://splitforms.com/api/submit" method="POST">
-  <input type="hidden" name="access_key" value="3c6145e1c2294fad91684ad18b8cfebf">
-  <input type="text"  name="name"  placeholder="Your name" required>
-  <input type="email" name="email" placeholder="Your email" required>
-  <textarea name="message" placeholder="Message" required></textarea>
-  <input type="checkbox" name="botcheck" style="display:none">
-  <button type="submit">Send</button>
-</form>
 
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
@@ -331,3 +323,40 @@ function prettyTime(t) {
 }
 
 window.RentalForm = RentalForm;
+
+<form id="lf-form">
+  <label for="name">Your name *</label>
+  <input id="name" type="text" name="name" placeholder="Jane Builder" required>
+  <label for="email">Email *</label>
+  <input id="email" type="email" name="email" placeholder="jane@example.com" required>
+  <label for="message">Message *</label>
+  <textarea id="message" name="message" placeholder="What's on your mind?" required></textarea>
+  <button type="submit">Send</button>
+</form>
+
+<p style="margin-top:12px;font-size:11px;color:#888;text-align:right">
+  Powered by <a href="https://splitforms.com" style="color:#888;text-decoration:none" target="_blank" rel="noopener">splitforms</a>
+</p>
+
+<script>
+  document.getElementById('lf-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    data.set('access_key', '3c6145e1c2294fad91684ad18b8cfebf');
+    data.set('subject', 'New contact form submission');
+
+    const res = await fetch('https://splitforms.com/api/submit', {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' },
+    });
+
+    const json = await res.json();
+    if (json.success) {
+      e.target.reset();
+      alert('Sent!');
+    } else {
+      alert('Error: ' + (json.message || 'Try again'));
+    }
+  });
+</script>
