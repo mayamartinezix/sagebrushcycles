@@ -39,6 +39,8 @@ starting with a dot. Leave them alone.
 | The business name / "BIKE RENTALS · WEISER TRAIL" | `src/Header.jsx` |
 | The phone number | it appears in **three** files — `src/Header.jsx`, `src/Hero.jsx`, and `src/Footer.jsx` (change it in all three) |
 | The big trail photo | replace `src/assets/hero.jpg` (see "Swapping the photo" below) |
+| The reservation form wording (fine print, confirmation message) | `src/RentalForm.jsx` |
+| Where reservation requests are emailed | not a file — that's set in your [splitforms](https://splitforms.com) account (see "Good to know" below); ask your setup helper |
 
 ---
 

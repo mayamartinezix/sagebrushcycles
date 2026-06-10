@@ -17,6 +17,13 @@ name: build-deploy
 #                            kv/flux-webhook under `token`)
 # Both optional — if unset, the job still builds/pushes and rumi picks the
 # change up on the OCIRepository's poll interval.
+#
+# Optional repo Actions *variable* (not secret — it ships in app.js and is
+# public by design):
+#   SPLITFORMS_KEY  splitforms access key baked into the built form, passed
+#                   as a Docker build-arg. Unset → the staging default in
+#                   build.mjs. Set it to point this deployment at a different
+#                   splitforms form (e.g. production's).
 
 on:
   push:
