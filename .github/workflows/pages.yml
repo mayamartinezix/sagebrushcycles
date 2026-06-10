@@ -1,0 +1,80 @@
+# Publish the built site (public/) to GitHub Pages.
+#
+# Deliberately self-contained and owner-agnostic so the repo can be transferred
+# to a new owner without edits: nothing here names the owner, and the first run
+# auto-enables Pages on the repo (configure-pages `enablement: true`). The site
+# appears at https://<owner>.github.io/<repo>/ — the generated site uses
+# relative asset paths, so it works at that subpath and at a custom-domain root
+# alike.
+#
+# Configuration (repo Settings → Secrets and variables → Actions → Variables):
+#   PAGES_ENABLED   Optional. Set to 'false' to turn this workflow off without
+#                   editing it. Unset (the default) means on.
+#
+# Custom domain: configure in Settings → Pages → Custom domain (GitHub
+# provisions the HTTPS cert; check "Enforce HTTPS" once issued). DNS is either
+# a CNAME record (www → <owner>.github.io) or, for an apex domain, A records to
+# 185.199.108.153 / .109. / .110. / .111. Note the CNAME target contains the
+# owner name, so after a repo transfer the DNS record must be updated too.
+#
+# If the auto-enable step ever fails (org policy can forbid the API call),
+# enable Pages once by hand: Settings → Pages → Source: "GitHub Actions",
+# then re-run this workflow.
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+    # Same idea as build-deploy.yml: only the inputs that affect the built
+    # site. Pages doesn't care about Dockerfile/deploy/**.
+    paths:
+      - "src/**"
+      - "build.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# Never cancel an in-flight Pages deployment; queue instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: vars.PAGES_ENABLED != 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # match the Dockerfile's node:22 build stage
+          cache: npm
+
+      - name: Build site
+        run: |
+          npm ci
+          npm run build
+
+      - name: Configure (and auto-enable) Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

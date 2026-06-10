@@ -129,6 +129,12 @@ That's it — the robot takes over from here. ✅
   digest-pinned manifest bundle (`…/sagebrushcycles-deploy`) as a Flux OCI
   artifact, and pings the rumi Flux Receiver. Full runbook in the meta-repo at
   `rumi/docs/apps/weeeeeiserbikes.md`.
+- **GitHub Pages copy:** `.github/workflows/pages.yml` also publishes the built
+  site to `https://<owner>.github.io/sagebrushcycles/` on the same triggers.
+  It's owner-agnostic (survives a repo transfer unchanged), auto-enables Pages
+  on first run, and can be turned off by setting the repo Actions variable
+  `PAGES_ENABLED=false`. A custom domain is just Settings → Pages + a DNS
+  record — see the comments at the top of that workflow.
 - **Local preview:** `npm install && npm run preview` → http://localhost:8080
   (one-shot build, then serves it).
 - **Dev mode (live reload):** `npm install && npm run dev` → http://localhost:8080.

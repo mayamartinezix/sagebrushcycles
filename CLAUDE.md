@@ -92,6 +92,17 @@ server pings (server-sent event) after each rebuild. That hook is **dev-only**;
   HTTPRoute). It is **not** applied from this repo — CI digest-pins and publishes
   it as a Flux OCI artifact. Image pull uses rumi's cluster-wide `ghcr-pull`
   secret.
+- **`.github/workflows/pages.yml`** additionally publishes the same `npm run
+  build` output to **GitHub Pages** (`https://<owner>.github.io/<repo>/`) on the
+  same source-path triggers — the two deploys coexist. It is deliberately
+  **owner-agnostic for repo transfer**: nothing in it names the owner, the first
+  run auto-enables Pages (`configure-pages` with `enablement: true`), and it can
+  be switched off without edits via the repo Actions variable
+  `PAGES_ENABLED=false`. The generated site uses only relative asset paths, so it
+  works at the Pages subpath and at a custom-domain root alike. Custom domains
+  are configured in Settings → Pages (not a `CNAME` file — that's ignored for
+  Actions-sourced deploys); the DNS `CNAME` target is `<owner>.github.io`, so a
+  repo transfer also means a DNS update.
 
 ### rumi side (in the `rumi` repo)
 
