@@ -8,6 +8,10 @@ const PRICE = { half: 30, full: 45, multiDay: 40 };  // multiDay is per day
 const MULTI_MIN_DAYS = 2;
 const MULTI_MAX_DAYS = 7;
 
+/* splitforms form-to-email backend — the access key is public by design */
+const SPLITFORMS_ENDPOINT = 'https://splitforms.com/api/submit';
+const SPLITFORMS_KEY = '45cc8be1f63e46f6a137f285544ad933';
+
 /* latest a half-day can start and still be back by closing time */
 const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;
 
@@ -20,6 +24,8 @@ function RentalForm({ formRef }) {
     shuttleType: 'council',   
   });
   const [sent, setSent] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [sendError, setSendError] = React.useState(false);
   const set = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
 
   const today = isoToday();
@@ -72,6 +78,42 @@ function RentalForm({ formRef }) {
   const canSend = data.plan === 'multi'
     ? baseOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
     : baseOk;
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!canSend || sending) return;
+    setSending(true);
+    setSendError(false);
+
+    const body = new FormData();
+    body.set('access_key', SPLITFORMS_KEY);
+    body.set('subject', `Bike rental request — ${data.name}`);
+    body.set('name', data.name);
+    body.set('phone', data.phone);
+    body.set('rental', totalLabel);
+    body.set('pickup', `${prettyDay(data.pday)} at ${prettyTime(data.ptime)}`);
+    body.set('dropoff', data.plan === 'multi'
+      ? `${prettyDay(data.dday)} at ${prettyTime(data.dtime)}`
+      : `by ${dropBy}`);
+    body.set('shuttle', data.shuttleNeeded === 'yes'
+      ? (data.shuttleType === 'council' ? 'Council-Cambridge shuttle' : 'Custom route shuttle')
+      : 'None');
+    body.set('estimated_total', total != null ? `$${total}` : '—');
+
+    try {
+      const res = await fetch(SPLITFORMS_ENDPOINT, {
+        method: 'POST',
+        body,
+        headers: { Accept: 'application/json' },
+      });
+      const json = await res.json();
+      if (json.success) setSent(true);
+      else setSendError(true);
+    } catch {
+      setSendError(true);
+    }
+    setSending(false);
+  }
 
   if (sent) {
     const planWord = data.plan === 'half' ? 'half-day' : data.plan === 'full' ? 'full-day' : `${days}-day`;
@@ -126,7 +168,7 @@ function RentalForm({ formRef }) {
           this is just a request, no strings (or chains) attached.
         </p>
 
-        <form className="sb-form" onSubmit={(e) => { e.preventDefault(); if (canSend) setSent(true); }}>
+        <form className="sb-form" onSubmit={handleSubmit}>
           <Field label="Your name" name="name" value={data.name}
             onChange={set('name')} placeholder="First and last" />
 
@@ -219,11 +261,19 @@ function RentalForm({ formRef }) {
             <span className="sb-total__amount">{total != null ? `$${total}` : 'Pick dates'}</span>
           </div>
 
-          <Button variant="primary" type="submit" full disabled={!canSend}>
-            Let's get rolling
+          <Button variant="primary" type="submit" full disabled={!canSend || sending}>
+            {sending ? 'Sending…' : "Let's get rolling"}
           </Button>
+          {sendError && (
+            <p className="sb-form__error">
+              Hmm, that didn't go through — please try again, or give us a call.
+            </p>
+          )}
           <p className="sb-form__fineprint">
             Helmet &amp; lock included. Must be 18+ to reserve; kids ride with a parent.
+          </p>
+          <p className="sb-form__credit">
+            Form powered by <a href="https://splitforms.com" target="_blank" rel="noopener">splitforms</a>
           </p>
         </form>
       </div>

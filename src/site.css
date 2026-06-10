@@ -283,6 +283,9 @@ main { display: block; }
 .sb-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 .sb-form__plan { display: flex; flex-direction: column; gap: var(--space-2); }
 .sb-form__fineprint { font-size: var(--text-xs); color: var(--fg3); text-align: center; margin: 0; line-height: 1.4; }
+.sb-form__error { font-size: var(--text-sm); font-weight: 600; color: var(--accent-hover); text-align: center; margin: 0; }
+.sb-form__credit { font-size: var(--text-xs); color: var(--fg3); text-align: center; margin: 0; }
+.sb-form__credit a { color: inherit; }
 
 .sb-field { display: flex; flex-direction: column; gap: 7px; }
 .sb-field__label { font-weight: 600; font-size: var(--text-sm); color: var(--fg1); }
