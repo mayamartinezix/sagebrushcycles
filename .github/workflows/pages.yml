@@ -17,9 +17,11 @@
 # 185.199.108.153 / .109. / .110. / .111. Note the CNAME target contains the
 # owner name, so after a repo transfer the DNS record must be updated too.
 #
-# If the auto-enable step ever fails (org policy can forbid the API call),
-# enable Pages once by hand: Settings → Pages → Source: "GitHub Actions",
-# then re-run this workflow.
+# First run after a transfer: the "Configure (and auto-enable) Pages" step
+# tries to create the Pages site, but the default workflow token often isn't
+# allowed to (it wasn't on this repo). If that step fails, enable Pages once
+# by hand — Settings → Pages → Source: "GitHub Actions" — and re-run the
+# workflow. Once the site exists, every later run just works.
 
 name: pages
 
