@@ -36,6 +36,12 @@ const VENDORS = [
 ];
 const STYLES = ["colors_and_type.css", "site.css"];
 
+// The splitforms form key is baked into app.js at build time (it's public by
+// design — it only identifies which form receives submissions). Set the
+// SPLITFORMS_KEY env var to point a build at a different form — production,
+// a per-developer test form, etc. Unset/empty falls back to the staging key.
+const SPLITFORMS_KEY_DEFAULT = "45cc8be1f63e46f6a137f285544ad933";
+
 function read(p) {
   return fs.readFileSync(p, "utf8");
 }
@@ -61,6 +67,9 @@ export function build({ dev = false } = {}) {
   let js = "";
   for (const v of VENDORS) js += read(path.join(VENDOR, v)) + "\n";
 
+  const define = {
+    __SPLITFORMS_KEY__: JSON.stringify(process.env.SPLITFORMS_KEY || SPLITFORMS_KEY_DEFAULT),
+  };
   for (const file of COMPONENTS) {
     const { code } = esbuild.transformSync(read(path.join(SRC, file)), {
       loader: "jsx",
@@ -68,6 +77,7 @@ export function build({ dev = false } = {}) {
       jsxFactory: "React.createElement",
       jsxFragment: "React.Fragment",
       minify: true,
+      define,
     });
     js += code + "\n";
   }

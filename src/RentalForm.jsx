@@ -1,4 +1,4 @@
-/* global React, Button, Field, Segmented, TimePicker, ASSETS */
+/* global React, Button, Field, Segmented, TimePicker, ASSETS, __SPLITFORMS_KEY__ */
 
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
@@ -8,9 +8,12 @@ const PRICE = { half: 30, full: 45, multiDay: 40 };  // multiDay is per day
 const MULTI_MIN_DAYS = 2;
 const MULTI_MAX_DAYS = 7;
 
-/* splitforms form-to-email backend — the access key is public by design */
+/* splitforms form-to-email backend. The access key is substituted at build
+   time (esbuild define in build.mjs) so each deployment — staging, production,
+   a developer's own form — can carry its own key: set the SPLITFORMS_KEY env
+   var to override the staging default. The key is public by design. */
 const SPLITFORMS_ENDPOINT = 'https://splitforms.com/api/submit';
-const SPLITFORMS_KEY = '45cc8be1f63e46f6a137f285544ad933';
+const SPLITFORMS_KEY = __SPLITFORMS_KEY__;
 
 /* latest a half-day can start and still be back by closing time */
 const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;

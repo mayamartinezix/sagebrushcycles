@@ -9,6 +9,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# The splitforms form key is baked into the bundle by the build; pass
+# --build-arg SPLITFORMS_KEY=... to point a deployment (e.g. production) at a
+# different form. Unset/empty falls back to the staging default in build.mjs.
+ARG SPLITFORMS_KEY=
+ENV SPLITFORMS_KEY=$SPLITFORMS_KEY
 RUN npm run build
 
 # alpine-slim drops the extra nginx modules/perl we don't need for a static

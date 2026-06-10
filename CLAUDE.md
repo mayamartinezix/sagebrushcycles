@@ -63,6 +63,18 @@ server pings (server-sent event) after each rebuild. That hook is **dev-only**;
 - **The phone number** appears in three components: `Header.jsx`, `Hero.jsx`,
   `Footer.jsx`. Prices live in the `RATES` array in `Rates.jsx`; hours/address/
   email in `Footer.jsx`.
+- **The rental form** submits to **splitforms** (form-to-email,
+  `https://splitforms.com/api/submit`). The access key is injected at build
+  time: `RentalForm.jsx` references the bare identifier `__SPLITFORMS_KEY__`,
+  which `build.mjs` substitutes via esbuild `define` — `SPLITFORMS_KEY` env var
+  overrides, unset/empty falls back to the staging key
+  (`SPLITFORMS_KEY_DEFAULT` in `build.mjs`). Per-environment wiring: repo
+  Actions variable `SPLITFORMS_KEY` → Docker `--build-arg` in
+  `build-deploy.yml` / build-step `env` in `pages.yml`; per-developer:
+  `SPLITFORMS_KEY=… npm run dev`. The key is **public by design** (ships in
+  `app.js`; it only routes submissions to a form), hence an Actions variable
+  rather than a secret. Don't edit the key in `RentalForm.jsx` — change the
+  env var / Actions variable, or the default in `build.mjs`.
 - **Fonts** (`src/fonts/`) are **WOFF2**, ~944 KB total (down from ~3.8 MB of
   TTF): the 5 static Baloo 2 weights + 2 Nunito Sans variable fonts, full (not
   subset — so the rental-form inputs keep every glyph). The unreferenced

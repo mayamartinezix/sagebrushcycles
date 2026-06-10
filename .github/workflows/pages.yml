@@ -10,6 +10,11 @@
 # Configuration (repo Settings → Secrets and variables → Actions → Variables):
 #   PAGES_ENABLED   Optional. Set to 'false' to turn this workflow off without
 #                   editing it. Unset (the default) means on.
+#   SPLITFORMS_KEY  Optional. splitforms access key baked into the built form
+#                   (a variable, not a secret — it ships in app.js and is
+#                   public by design). Unset → the staging default in
+#                   build.mjs. Set this after a transfer so the new owner's
+#                   site submits to their own splitforms form.
 #
 # Custom domain: configure in Settings → Pages → Custom domain (GitHub
 # provisions the HTTPS cert; check "Enforce HTTPS" once issued). DNS is either
@@ -64,6 +69,9 @@ jobs:
           cache: npm
 
       - name: Build site
+        env:
+          # See header — unset falls back to the staging key in build.mjs.
+          SPLITFORMS_KEY: ${{ vars.SPLITFORMS_KEY }}
         run: |
           npm ci
           npm run build

@@ -106,6 +106,11 @@ That's it — the robot takes over from here. ✅
 - **The address** (`weeeeeiserbikes.staging.tripoli.systems`) is a temporary
   staging address. When you're ready to use your real domain
   (like `sagebrushcycle.co`), ask your setup helper.
+- **Reservation requests** from the "Reserve a bike" form arrive by email via
+  [splitforms](https://splitforms.com) (free plan: 1,000 requests/month, with a
+  dashboard showing every submission). Which splitforms form receives them is
+  set by the `SPLITFORMS_KEY` setting described in the technical section — ask
+  your setup helper if requests should go to a different email.
 
 ---
 
@@ -135,6 +140,15 @@ That's it — the robot takes over from here. ✅
   on first run, and can be turned off by setting the repo Actions variable
   `PAGES_ENABLED=false`. A custom domain is just Settings → Pages + a DNS
   record — see the comments at the top of that workflow.
+- **Form backend:** the rental form POSTs to splitforms
+  (`https://splitforms.com/api/submit`). The access key is baked into `app.js`
+  at build time via an esbuild define (`__SPLITFORMS_KEY__` in
+  `RentalForm.jsx`): the `SPLITFORMS_KEY` env var overrides, unset falls back
+  to the staging form's key in `build.mjs`. Per environment: the repo Actions
+  variable `SPLITFORMS_KEY` feeds both workflows (Docker build-arg for the
+  image, env for Pages); per developer, `SPLITFORMS_KEY=… npm run dev`. The
+  key is public by design (it only routes submissions), so it's a variable,
+  not a secret.
 - **Local preview:** `npm install && npm run preview` → http://localhost:8080
   (one-shot build, then serves it).
 - **Dev mode (live reload):** `npm install && npm run dev` → http://localhost:8080.

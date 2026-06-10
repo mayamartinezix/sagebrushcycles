@@ -79,6 +79,10 @@ jobs:
           tags: |
             ${{ env.IMAGE_REPO }}:preview
             ${{ env.IMAGE_REPO }}:${{ github.sha }}
+          # Repo Actions *variable* (not secret — the key ships in app.js and
+          # is public by design). Unset → the staging default in build.mjs.
+          build-args: |
+            SPLITFORMS_KEY=${{ vars.SPLITFORMS_KEY }}
 
       - name: Setup Flux CLI
         run: |
