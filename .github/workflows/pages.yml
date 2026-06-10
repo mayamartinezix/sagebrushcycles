@@ -16,6 +16,15 @@
 #                   build.mjs. Set this after a transfer so the new owner's
 #                   site submits to their own splitforms form.
 #
+#                   To give the Pages site its OWN form (different from the
+#                   docker/rumi build): the job below runs in the
+#                   `github-pages` environment, and an environment-scoped
+#                   variable shadows the repo-level one for jobs in that
+#                   environment. So set SPLITFORMS_KEY under Settings →
+#                   Environments → github-pages → Environment variables —
+#                   no workflow edit needed. build-deploy.yml has no
+#                   `environment:` and keeps using the repo-level variable.
+#
 # Custom domain: configure in Settings → Pages → Custom domain (GitHub
 # provisions the HTTPS cert; check "Enforce HTTPS" once issued). DNS is either
 # a CNAME record (www → <owner>.github.io) or, for an apex domain, A records to
@@ -70,7 +79,9 @@ jobs:
 
       - name: Build site
         env:
-          # See header — unset falls back to the staging key in build.mjs.
+          # See header — resolves the github-pages environment variable if
+          # set, else the repo variable; unset falls back to the staging key
+          # in build.mjs.
           SPLITFORMS_KEY: ${{ vars.SPLITFORMS_KEY }}
         run: |
           npm ci
