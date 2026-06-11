@@ -12,6 +12,13 @@ function Footer() {
             <p>Weiser Trailhead<br />by the river bridge</p>
           </div>
           <div className="sb-footer__col">
+            <h4>Explore</h4>
+            <p>
+              <a href="#">Home</a><br />
+              <a href="#trail">Weiser River Trail</a>
+            </p>
+          </div>
+          <div className="sb-footer__col">
             <h4>Open</h4>
             <p>Open Every Day! <br /> By Appointment </p>
           </div>
