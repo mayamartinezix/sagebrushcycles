@@ -24,6 +24,7 @@ const COMPONENTS = [
   "ui.jsx",
   "Header.jsx",
   "Hero.jsx",
+  "TrailInfo.jsx",
   "Rates.jsx",
   "RentalForm.jsx",
   "Footer.jsx",
