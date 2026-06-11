@@ -96,4 +96,4 @@ export default function TrailInfo({ onReserve }) {
   );
 }
 
-window.TrailInfo = TrailInfo;
+
