@@ -1,7 +1,6 @@
 import React from 'react';
 
-
-export function Button({ variant, onClick, children }) {
+function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
   return (
     <button className={className} onClick={onClick}>
@@ -10,7 +9,6 @@ export function Button({ variant, onClick, children }) {
   );
 }
 
-// 2. The TrailInfo Component
 export function TrailInfo({ onReserve }) {
   return (
     <div className="sb-trail-page">
@@ -96,9 +94,6 @@ export function TrailInfo({ onReserve }) {
   );
 }
 
-// 3. Safe Window Assignment for SSR/Build Tools
 if (typeof window !== 'undefined') {
   window.TrailInfo = TrailInfo;
 }
-
-export default TrailInfo;
