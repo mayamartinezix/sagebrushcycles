@@ -1,4 +1,4 @@
-import React from 'react'; // 👈 1. Add this
+import React from 'react'; 
 
 function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
