@@ -1,6 +1,7 @@
-import React from 'react'; 
+import React from 'react';
 
-function Button({ variant, onClick, children }) {
+// 1. The Button Component
+export function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
   return (
     <button className={className} onClick={onClick}>
@@ -9,11 +10,10 @@ function Button({ variant, onClick, children }) {
   );
 }
 
-// 👈 2. Add 'export default' here
-export default function TrailInfo({ onReserve }) {
+// 2. The TrailInfo Component
+export function TrailInfo({ onReserve }) {
   return (
     <div className="sb-trail-page">
-      {/* ... keeping all your exact same JSX content here ... */}
       <section className="sb-trail-hero">
         <div className="sb-trail-hero__content">
           <p className="sb-hero__eyebrow">DISCOVER THE PATH LESS TRAVELED</p>
@@ -96,19 +96,9 @@ export default function TrailInfo({ onReserve }) {
   );
 }
 
-function initTrailInfo() {
-  if (typeof window !== 'undefined') {
-    window.TrailInfo = TrailInfo;
-    
-    // If you are using Lucide icons, trigger them to render now
-    if (window.lucide && typeof window.lucide.createIcons === 'function') {
-      window.lucide.createIcons();
-    }
-  }
+// 3. Safe Window Assignment for SSR/Build Tools
+if (typeof window !== 'undefined') {
+  window.TrailInfo = TrailInfo;
 }
 
-// Run immediately if the page is already loaded, otherwise wait for it
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  initTrailInfo();
-} else {
-  document.addEventListener('DOMContentLoaded', initTrailInfo);
+export default TrailInfo;
