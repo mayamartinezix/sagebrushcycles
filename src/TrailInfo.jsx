@@ -1,4 +1,4 @@
-/* global React, Button */
+
 
 function TrailInfo({ onReserve }) {
   return (
