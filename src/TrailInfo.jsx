@@ -1,5 +1,4 @@
-import React from 'react';
-
+// 1. Define the Button at the top so TrailInfo can use it locally
 function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
   return (
@@ -9,7 +8,8 @@ function Button({ variant, onClick, children }) {
   );
 }
 
-export function TrailInfo({ onReserve }) {
+// 2. Define your TrailInfo component
+function TrailInfo({ onReserve }) {
   return (
     <div className="sb-trail-page">
       <section className="sb-trail-hero">
@@ -94,6 +94,5 @@ export function TrailInfo({ onReserve }) {
   );
 }
 
-if (typeof window !== 'undefined') {
-  window.TrailInfo = TrailInfo;
-}
+// 3. Attach it globally so App.jsx can find it when building the page layout
+window.TrailInfo = TrailInfo;
