@@ -1,4 +1,12 @@
 
+function Button({ variant, onClick, children }) {
+  const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
+  return (
+    <button className={className} onClick={onClick}>
+      {children}
+    </button>
+  );
+}
 
 function TrailInfo({ onReserve }) {
   return (
