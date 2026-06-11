@@ -1,5 +1,4 @@
 /* global React */
-const { useState } = React;
 
 const ASSETS = 'assets';
 
@@ -55,7 +54,7 @@ function minsToVal(mins) {
 }
 
 function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepMin = 30, minMinutes, maxMinutes }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (open && window.lucide) window.lucide.createIcons();
