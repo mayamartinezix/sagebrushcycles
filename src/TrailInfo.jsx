@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // 👈 1. Add this
 
 function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
@@ -9,9 +9,11 @@ function Button({ variant, onClick, children }) {
   );
 }
 
-function TrailInfo({ onReserve }) {
+// 👈 2. Add 'export default' here
+export default function TrailInfo({ onReserve }) {
   return (
     <div className="sb-trail-page">
+      {/* ... keeping all your exact same JSX content here ... */}
       <section className="sb-trail-hero">
         <div className="sb-trail-hero__content">
           <p className="sb-hero__eyebrow">DISCOVER THE PATH LESS TRAVELED</p>
