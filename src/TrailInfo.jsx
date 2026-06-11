@@ -1,6 +1,6 @@
 import React from 'react';
 
-// 1. The Button Component
+
 export function Button({ variant, onClick, children }) {
   const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
   return (
