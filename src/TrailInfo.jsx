@@ -96,4 +96,19 @@ export default function TrailInfo({ onReserve }) {
   );
 }
 
+function initTrailInfo() {
+  if (typeof window !== 'undefined') {
+    window.TrailInfo = TrailInfo;
+    
+    // If you are using Lucide icons, trigger them to render now
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+}
 
+// Run immediately if the page is already loaded, otherwise wait for it
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  initTrailInfo();
+} else {
+  document.addEventListener('DOMContentLoaded', initTrailInfo);
