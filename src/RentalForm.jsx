@@ -22,7 +22,7 @@ const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;
 function RentalForm({ formRef }) {
   // FIXED: Using React.useState directly to avoid ReferenceErrors
   const [data, setData] = React.useState({
-    name: '', phone: '', plan: 'half',
+    name: '', phone: '', email: '', plan: 'half',
     pday: '', ptime: '', dday: '', dtime: '',
     shuttleNeeded: 'no',      
     shuttleType: 'council',   
@@ -78,7 +78,7 @@ function RentalForm({ formRef }) {
     dropBy = `${fmtMin(SHOP_CLOSE)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`; // FIXED: Improved UX string
   }
 
-  const baseOk = data.name.trim() && data.phone.trim() && data.pday && data.ptime;
+  const baseOk = data.name.trim() && data.phone.trim() && data.email.trim() && data.pday && data.ptime;
   const canSend = data.plan === 'multi'
     ? baseOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
     : baseOk;
@@ -94,6 +94,7 @@ function RentalForm({ formRef }) {
     body.set('subject', `Bike rental request — ${data.name}`);
     body.set('name', data.name);
     body.set('phone', data.phone);
+    body.set('email', data.email);
     body.set('rental', totalLabel);
     body.set('pickup', `${prettyDay(data.pday)} at ${prettyTime(data.ptime)}`);
     body.set('dropoff', data.plan === 'multi'
@@ -140,7 +141,7 @@ function RentalForm({ formRef }) {
             )}
 
             {' '}Estimated bike total <strong>${total}</strong>. We'll text you at{' '}
-            <strong>{data.phone}</strong> to confirm — usually within the hour.
+            <strong>{data.phone}</strong> and email <strong>{data.email}</strong> to confirm — usually within the hour.
           </p>
           <p className="sb-confirm__sign">Happy trails — wheel see you soon!</p>
           <Button variant="secondary" onClick={() => setSent(false)}>
@@ -179,6 +180,10 @@ function RentalForm({ formRef }) {
           <Field label="Phone number" name="phone" type="tel" inputMode="tel"
             value={data.phone} onChange={set('phone')} placeholder="(208) 549-9099"
             hint="We'll text you here to confirm." />
+
+          <Field label="Email address" name="email" type="email" inputMode="email"
+            value={data.email} onChange={set('email')} placeholder="you@example.com"
+            hint="We'll send your receipt here." />
 
           <div className="sb-form__plan">
             <span className="sb-field__label">How long?</span>

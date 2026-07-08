@@ -43,7 +43,7 @@ function App() {
           <React.Fragment>
             <Hero onReserve={scrollToForm} />
             <Rates />
-            <div id="reserve">
+            <div className="sb-reserve-anchor">
               <RentalForm formRef={formRef} />
             </div>
           </React.Fragment>
