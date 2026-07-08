@@ -1,13 +1,5 @@
 /* global React, Button, Field, Segmented, TimePicker, ASSETS, __SPLITFORMS_KEY__ */
 
-<form action="https://splitforms.com/api/submit" method="POST">
-  <input type="hidden" name="access_key" value="3c6145e1c2294fad91684ad18b8cfebf">
-  <input type="text"  name="name"  placeholder="Your name" required>
-  <input type="email" name="email" placeholder="Your email" required>
-  <textarea name="message" placeholder="Message" required></textarea>
-  <input type="checkbox" name="botcheck" style="display:none">
-  <button type="submit">Send</button>
-</form>
 
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm

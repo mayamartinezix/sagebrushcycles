@@ -148,9 +148,12 @@ That's it — the robot takes over from here. ✅
   `RentalForm.jsx`): the `SPLITFORMS_KEY` env var overrides, unset falls back
   to the staging form's key in `build.mjs`. Per environment: the repo Actions
   variable `SPLITFORMS_KEY` feeds both workflows (Docker build-arg for the
-  image, env for Pages); per developer, `SPLITFORMS_KEY=… npm run dev`. The
-  key is public by design (it only routes submissions), so it's a variable,
-  not a secret.
+  image, env for Pages); per developer, `SPLITFORMS_KEY=… npm run dev`. To
+  point the Pages site at its own form, set `SPLITFORMS_KEY` as an
+  environment variable on the `github-pages` environment (Settings →
+  Environments) — it shadows the repo variable for the Pages job only (see
+  the `pages.yml` header). The key is public by design (it only routes
+  submissions), so it's a variable, not a secret.
 - **Local preview:** `npm install && npm run preview` → http://localhost:8080
   (one-shot build, then serves it).
 - **Dev mode (live reload):** `npm install && npm run dev` → http://localhost:8080.

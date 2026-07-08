@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weiser River Trail</title>
+  
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f5; color: #18181b; }
+    .sb-trail-page { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .btn-primary { background: #0284c7; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-secondary { background: #e4e4e7; color: #27272a; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    .sb-trail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
+    .sb-trail-card { padding: 15px; border: 1px solid #e4e4e7; border-radius: 6px; }
+    i { display: inline-block; width: 24px; height: 24px; stroke: #0284c7; }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    
+    // Your Button Component
+    function Button({ variant, onClick, children }) {
+      const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
+      return (
+        <button className={className} onClick={onClick}>
+          {children}
+        </button>
+      );
+    }
+
+    // Your TrailInfo Component
+    function TrailInfo({ onReserve }) {
+      return (
+        <div className="sb-trail-page">
+          <section className="sb-trail-hero">
+            <div className="sb-trail-hero__content">
+              <p className="sb-hero__eyebrow">DISCOVER THE PATH LESS TRAVELED</p>
+              <h1 className="sb-hero__title">The Weiser River Trail</h1>
+              <p className="sb-hero__lead">
+                Spanning 84 miles through the heart of Idaho, the Weiser River Trail is a
+                National Recreation Trail that follows the historic Pacific and Idaho Northern
+                railroad line. Starting right here in Cambridge, you're perfectly positioned
+                to explore its most scenic stretches.
+              </p>
+              <div className="sb-hero__cta">
+                <Button variant="primary" onClick={onReserve}>Reserve your ride</Button>
+              </div>
+            </div>
+          </section>
+
+          <section className="sb-trail-details">
+            <div className="sb-trail-grid">
+              <div className="sb-trail-card">
+                <div className="sb-trail-card__icon">
+                  <i data-lucide="map-pin"></i>
+                </div>
+                <h3 className="sb-trail-card__title">The Cambridge Section</h3>
+                <p className="sb-trail-card__text">
+                  Cambridge serves as a vital midpoint on the trail. Heading south takes you through
+                  the dramatic Weiser River Canyons toward Midvale, while heading north leads
+                  upward into the lush forests and meadows near Council.
+                </p>
+              </div>
+
+              <div className="sb-trail-card">
+                <div className="sb-trail-card__icon">
+                  <i data-lucide="rail-symbol"></i>
+                </div>
+                <h3 className="sb-trail-card__title">Historic Trestles</h3>
+                <p className="sb-trail-card__text">
+                  The trail features 62 historic railroad trestles that have been converted for
+                  trail use. These wooden and steel structures provide stunning vantage points
+                  over the river and surrounding valleys.
+                </p>
+              </div>
+
+              <div className="sb-trail-card">
+                <div className="sb-trail-card__icon">
+                  <i data-lucide="mountain"></i>
+                </div>
+                <h3 className="sb-trail-card__title">Diverse Landscapes</h3>
+                <p className="sb-trail-card__text">
+                  Experience Idaho's changing face: from open desert canyons and rolling
+                  farmland to dense evergreen forests and alpine meadows. Keep an eye out
+                  for local wildlife like bald eagles, deer, and elk.
+                </p>
+              </div>
+
+              <div className="sb-trail-card">
+                <div className="sb-trail-card__icon">
+                  <i data-lucide="info"></i>
+                </div>
+                <h3 className="sb-trail-card__title">Trail Tips</h3>
+                <p className="sb-trail-card__text">
+                  The trail is unpaved (primarily gravel and dirt) but well-maintained.
+                  Our rental bikes are chosen specifically for these conditions to ensure
+                  a smooth and comfortable journey.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="sb-trail-cta">
+            <div className="sb-trail-cta__card">
+              <h2 className="sb-section__title">Ready to explore?</h2>
+              <p className="sb-section__sub">
+                Whether you're looking for a quick afternoon spin or a full day of adventure,
+                we've got the gear and the advice to get you on your way.
+              </p>
+              <Button variant="secondary" onClick={() => window.location.hash = ''}>Back to home</Button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // Making it global, just like you wanted
+    window.TrailInfo = TrailInfo;
+
+    // --- RENDER DEMO ---
+    // This part actually mounts it to the screen so you can see it working!
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<TrailInfo onReserve={() => alert('Booking system triggered!')} />);
+    
+    // Initialize the icons after React renders
+    setTimeout(() => lucide.createIcons(), 100);
+  </script>
+</body>
+</html>

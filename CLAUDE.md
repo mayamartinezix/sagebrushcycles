@@ -71,7 +71,12 @@ server pings (server-sent event) after each rebuild. That hook is **dev-only**;
   (`SPLITFORMS_KEY_DEFAULT` in `build.mjs`). Per-environment wiring: repo
   Actions variable `SPLITFORMS_KEY` → Docker `--build-arg` in
   `build-deploy.yml` / build-step `env` in `pages.yml`; per-developer:
-  `SPLITFORMS_KEY=… npm run dev`. The key is **public by design** (ships in
+  `SPLITFORMS_KEY=… npm run dev`. To give the **Pages site its own form**,
+  set `SPLITFORMS_KEY` as an environment variable on the `github-pages`
+  environment (Settings → Environments) — the `pages.yml` job runs in that
+  environment, so the env-scoped value shadows the repo variable there
+  (invisible in the workflow file; documented in its header), while
+  `build-deploy.yml` keeps the repo-level one. The key is **public by design** (ships in
   `app.js`; it only routes submissions to a form), hence an Actions variable
   rather than a secret. Don't edit the key in `RentalForm.jsx` — change the
   env var / Actions variable, or the default in `build.mjs`.
