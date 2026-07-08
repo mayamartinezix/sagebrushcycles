@@ -5,7 +5,7 @@ const RATES = [
   {
     icon: 'bike',
     name: 'Half-day',
-    price: '$30',
+    price: '$45',
     unit: 'up to 4 hours',
     desc: 'Just right for an easy out-and-back along the river. No spokes about it.',
     tag: 'No Need To Brake The Bank',
@@ -13,7 +13,7 @@ const RATES = [
   {
     icon: 'bike',
     name: 'Full-day',
-    price: '$45',
+    price: '$65',
     unit: 'all day, your pace',
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
   },
@@ -28,7 +28,7 @@ const RATES = [
   {
     icon: 'car',
     name: 'Shuttle Service',
-    price: '$20-$40',
+    price: '$25 + milage cost',
     unit: 'Council-Cambridge',
     desc: 'We go the extra mile.',
   },
