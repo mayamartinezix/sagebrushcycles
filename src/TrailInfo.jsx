@@ -1,12 +1,4 @@
-// 1. Define the Button at the top so TrailInfo can use it locally
-function Button({ variant, onClick, children }) {
-  const className = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
-  return (
-    <button className={className} onClick={onClick}>
-      {children}
-    </button>
-  );
-}
+
 
 // 2. Define your TrailInfo component
 function TrailInfo({ onReserve }) {
