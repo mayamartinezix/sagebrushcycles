@@ -1,8 +1,14 @@
 # Sagebrush Cycle — your website
 
-This is the home of your website. The live site customers see is:
+This is the home of your website. After you save a change, the live preview
+updates here (about 1–2 minutes after the green check ✓):
 
-### 👉 https://weeeeeiserbikes.staging.tripoli.systems
+### 👉 https://mayamartinezix.github.io/sagebrushcycles/
+
+There is also a separate **staging** copy at
+https://weeeeeiserbikes.staging.tripoli.systems — that address is updated by a
+different deploy path and may lag behind GitHub Pages. Use the GitHub Pages link
+above to confirm your edits.
 
 You change the website by editing the **pieces** it's made of (in the **`src`**
 folder). When you save a change, the site rebuilds itself and goes live a minute
@@ -47,7 +53,7 @@ starting with a dot. Leave them alone.
 ## How to make a text change (no software needed)
 
 You'll do this on this repo's page in your browser
-(github.com/licenseplated/sagebrushcycles).
+(github.com/mayamartinezix/sagebrushcycles).
 
 1. Click into the **`src`** folder, then click the file you want from the table
    above (for example **`Rates.jsx`**).
@@ -80,7 +86,7 @@ That's it — the robot takes over from here. ✅
    - A **red ✗** means the rebuild failed and the live site was **left
      unchanged** (so visitors never see a broken page). See "If something goes
      wrong" below.
-2. Open **https://weeeeeiserbikes.staging.tripoli.systems** in a new tab.
+2. Open **https://mayamartinezix.github.io/sagebrushcycles/** in a new tab.
 3. Still seeing the old version? Do a **hard refresh** to clear your browser's
    memory of the old page:
    - **Windows:** hold **Ctrl** and press **F5**
@@ -105,9 +111,12 @@ That's it — the robot takes over from here. ✅
 - **Changes take about 1–2 minutes** to go live after the green check ✓.
 - **A failed build never reaches visitors** — the current site stays up until a
   good version is ready.
-- **The address** (`weeeeeiserbikes.staging.tripoli.systems`) is a temporary
-  staging address. When you're ready to use your real domain
-  (like `sagebrushcycle.co`), ask your setup helper.
+- **The GitHub Pages address** (`mayamartinezix.github.io/sagebrushcycles`) is
+  where your edits show up after each successful build. A separate staging copy
+  lives at `weeeeeiserbikes.staging.tripoli.systems` (updated only when the
+  Docker deploy workflow can push to the shared container registry — ask your
+  setup helper if that copy looks out of date). When you're ready to use your
+  real domain (like `sagebrushcycle.co`), ask your setup helper.
 - **Reservation requests** from the "Reserve a bike" form arrive by email via
   [splitforms](https://splitforms.com) (free plan: 1,000 requests/month, with a
   dashboard showing every submission). Which splitforms form receives them is
@@ -129,19 +138,19 @@ That's it — the robot takes over from here. ✅
   (`ui → Header → Hero → Rates → RentalForm → Footer → App`, then
   `image-slot.js`); the hero photo is wired via the `<image-slot src="…">`
   fallback so it's a plain swappable file.
-- **Build/deploy:** a multi-stage `Dockerfile` (node build stage → nginx) runs
-  the same `npm run build`. Pushes to `main` touching `src/**`, `build.mjs`,
-  `package*.json`, `Dockerfile`, or the workflow trigger GitHub Actions, which
-  builds the image (`ghcr.io/licenseplated/sagebrushcycles`), publishes a
-  digest-pinned manifest bundle (`…/sagebrushcycles-deploy`) as a Flux OCI
-  artifact, and pings the rumi Flux Receiver. Full runbook in the meta-repo at
+- **GitHub Pages (primary preview):** `.github/workflows/pages.yml` publishes
+  the built site to `https://<owner>.github.io/sagebrushcycles/` on pushes to
+  `main` touching `src/**`, `build.mjs`, or `package*.json`. Owner-agnostic
+  (survives a repo transfer unchanged), auto-enables Pages on first run, and
+  can be turned off via the repo Actions variable `PAGES_ENABLED=false`. A custom
+  domain is Settings → Pages + DNS — see the workflow header.
+- **Staging deploy (rumi):** `.github/workflows/build-deploy.yml` runs the same
+  `npm run build` inside a multi-stage `Dockerfile` (node → nginx), pushes the
+  image to `ghcr.io/licenseplated/sagebrushcycles`, publishes a digest-pinned
+  manifest bundle (`…/sagebrushcycles-deploy`) as a Flux OCI artifact, and pings
+  the rumi Flux Receiver. Requires write access to that GHCR package (typically
+  the `licenseplated` org repo, not a fork). Full runbook:
   `rumi/docs/apps/weeeeeiserbikes.md`.
-- **GitHub Pages copy:** `.github/workflows/pages.yml` also publishes the built
-  site to `https://<owner>.github.io/sagebrushcycles/` on the same triggers.
-  It's owner-agnostic (survives a repo transfer unchanged), auto-enables Pages
-  on first run, and can be turned off by setting the repo Actions variable
-  `PAGES_ENABLED=false`. A custom domain is just Settings → Pages + a DNS
-  record — see the comments at the top of that workflow.
 - **Form backend:** the rental form POSTs to splitforms
   (`https://splitforms.com/api/submit`). The access key is baked into `app.js`
   at build time via an esbuild define (`__SPLITFORMS_KEY__` in
