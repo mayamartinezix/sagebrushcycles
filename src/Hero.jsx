@@ -16,21 +16,17 @@ function Hero({ onReserve }) {
       <div className="sb-hero__cta">
         <div className="sb-hero__btns">
           <Button variant="primary" onClick={onReserve}>Saddle up</Button>
-          <Button variant="secondary" onClick={() => { window.location.hash = 'trail'; }}>The Trail</Button>
+          <Button variant="secondary" onClick={() => { window.location.hash = 'trail'; }}>Weiser Trail Info</Button>
         </div>
-        <a className="sb-hero__link" href="tel:+12085550148">
-          <i data-lucide="phone"></i> Or give us a call
-        </a>
       </div>
       <div className="sb-hero__photo">
-        <span className="sb-hero__badge">Hop on!</span>
-        {/* The hero photo. To change it, replace src/assets/hero.jpg with a new
-            photo of the same name and rebuild — see README. */}
+        <span className="sb-hero__badge">Explore natural beauty</span>
+        {/* The hero photo lives in src/assets/ — swap the file or change src below. */}
         <image-slot
           id="sb-hero-photo"
           shape="rounded"
           radius="24"
-          src="assets/hero.jpg"
+          src="assets/Mom%20Weiser%20jpg.jpg"
           placeholder="Drop a golden-hour trail photo"
         ></image-slot>
         <img className="sb-hero__bike" src={`${ASSETS}/bike.svg`} alt="" aria-hidden="true" />

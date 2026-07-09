@@ -29,7 +29,6 @@ const RATES = [
     icon: 'car',
     name: 'Shuttle Service',
     price: '$25 + milage cost',
-    unit: 'Council-Cambridge',
     desc: 'We go the extra mile.',
   },
   
@@ -46,7 +45,7 @@ function Rates() {
       {r.tag && <span className="sb-rate__tag">{r.tag}</span>}
       <img className="sb-rate__icon" src={`${ASSETS}/${r.icon}.svg`} alt="" />
       <h3 className="sb-rate__name">{r.name}</h3>
-      <p className="sb-rate__price">{r.price}<span> / {r.unit}</span></p>
+      <p className="sb-rate__price">{r.price}{r.unit ? <span> / {r.unit}</span> : null}</p>
       <p className="sb-rate__desc">{r.desc}</p>
     </div>
   );
