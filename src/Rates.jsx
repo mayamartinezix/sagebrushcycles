@@ -5,7 +5,7 @@ const RATES = [
   {
     icon: 'bike',
     name: 'Half-day',
-    price: '$30',
+    price: '$45',
     unit: 'up to 4 hours',
     desc: 'Just right for an easy out-and-back along the river. No spokes about it.',
     tag: 'No Need To Brake The Bank',
@@ -13,14 +13,14 @@ const RATES = [
   {
     icon: 'bike',
     name: 'Full-day',
-    price: '$45',
+    price: '$65',
     unit: 'all day, your pace',
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
   },
   {
     icon: 'sun',
     name: 'Multi-day (2–7 days)',
-    price: '$40',
+    price: '$50',
     unit: 'per day of ex-cycling fun',
     desc: 'Shift things into high gear.',
     tag: 'The Wheel Deal',
@@ -28,17 +28,11 @@ const RATES = [
   {
     icon: 'car',
     name: 'Shuttle Service',
-    price: '$20-$40',
+    price: '$25 + milage cost',
     unit: 'Council-Cambridge',
     desc: 'We go the extra mile.',
   },
-  {
-    icon: 'CutePhone',
-    name: 'Custom Shuttle Service',
-    price: 'Call us for a quote',
-    unit: 'Anywhere you want',
-    desc: 'Shift happens but we got you!',
-  },
+  
 ];
 
 function Rates() {

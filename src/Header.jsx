@@ -11,7 +11,10 @@ function Header() {
             <small>BIKE RENTALS · CAMBRIDGE </small>
           </span>
         </a>
-      </div>
+      <a className="sb-header__phone" href="tel:+12085550148">
+        <i data-lucide="phone"></i>
+        <span>(208) 549 9099</span>
+      </a>
     </header>
   );
 }

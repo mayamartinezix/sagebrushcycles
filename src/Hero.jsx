@@ -18,7 +18,7 @@ function Hero({ onReserve }) {
           <Button variant="primary" onClick={onReserve}>Saddle up</Button>
           <Button variant="secondary" onClick={() => { window.location.hash = 'trail'; }}>The Trail</Button>
         </div>
-      </div>
+       
 
       <div className="sb-hero__photo">
         <span className="sb-hero__badge">Hop on!</span>

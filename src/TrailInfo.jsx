@@ -1,5 +1,6 @@
-/* global React, Button */
 
+
+// 2. Define your TrailInfo component
 function TrailInfo({ onReserve }) {
   return (
     <div className="sb-trail-page">
@@ -85,4 +86,5 @@ function TrailInfo({ onReserve }) {
   );
 }
 
+// 3. Attach it globally so App.jsx can find it when building the page layout
 window.TrailInfo = TrailInfo;
