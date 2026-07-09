@@ -20,7 +20,7 @@ const RATES = [
   {
     icon: 'sun',
     name: 'Multi-day (2–7 days)',
-    price: '$40',
+    price: '$50',
     unit: 'per day of ex-cycling fun',
     desc: 'Shift things into high gear.',
     tag: 'The Wheel Deal',
