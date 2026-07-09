@@ -123,7 +123,7 @@ function RentalForm({ formRef }) {
   if (sent) {
     const planWord = data.plan === 'half' ? 'half-day' : data.plan === 'full' ? 'full-day' : `${days}-day`;
     return (
-      <section className="sb-form-wrap" id="reserve" ref={formRef}>
+      <section className="sb-form-wrap" ref={formRef}>
         <div className="sb-confirm">
           <img className="sb-confirm__art" src={`${ASSETS}/sun.svg`} alt="" />
           <h2 className="sb-confirm__title">You're all set, {data.name.split(' ')[0]}!</h2>
@@ -153,7 +153,7 @@ function RentalForm({ formRef }) {
   }
 
   return (
-    <section className="sb-form-wrap" id="reserve" ref={formRef}>
+    <section className="sb-form-wrap" ref={formRef}>
       {/* INJECTED CSS FOR EVEN SPACING */}
       <style>{`
         .shuttle-segmented {
