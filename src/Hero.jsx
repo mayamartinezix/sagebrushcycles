@@ -20,7 +20,7 @@ function Hero({ onReserve }) {
         </div>
       </div>
       <div className="sb-hero__photo">
-        <span className="sb-hero__badge">Explore natural beauty</span>
+        <span className="sb-hero__badge">Explore Natural Beauty</span>
         {/* The hero photo lives in src/assets/ — swap the file or change src below. */}
         <image-slot
           id="sb-hero-photo"
