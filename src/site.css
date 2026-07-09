@@ -293,13 +293,14 @@ image-slot {
 
 .sb-hero__photo {
   position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
+  overflow: visible;
+  padding-top: var(--space-4);
 }
 .sb-hero__badge {
   position: absolute;
-  top: -14px; left: -8px;
-  z-index: 2;
+  top: 0;
+  left: -8px;
+  z-index: 3;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--text-base);
@@ -767,8 +768,7 @@ image-slot {
   .sb-hero__photo image-slot { height: 340px; }
   .sb-hero__badge {
     left: -8px;
-    top: -14px;
-    max-width: none;
+    top: 0;
     font-size: var(--text-base);
     padding: 8px 18px;
   }
@@ -900,12 +900,11 @@ image-slot {
   }
   .sb-hero__sun { width: 68px; top: 0; right: 0; }
   .sb-hero__badge {
-    left: 8px;
-    top: -8px;
-    max-width: calc(100% - 16px);
+    left: -4px;
+    top: 0;
     font-size: var(--text-sm);
-    padding: 6px 12px;
-    text-wrap: balance;
+    padding: 6px 14px;
+    white-space: nowrap;
   }
   .sb-hero__bike { width: 88px; bottom: -14px; right: 2px; }
   .sb-hero__photo image-slot { height: min(56vw, 260px); min-height: 220px; }
