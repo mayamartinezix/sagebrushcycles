@@ -53,12 +53,12 @@ function Rates() {
   return (
     <section className="sb-rates" id="rates">
       <h2 className="sb-section__title">Rates that won't tire you out</h2>
-      <p className="sb-section__sub">Helmet, lock, and a little trail map come with every bike — that's just how we roll.</p>
+      <p className="sb-section__sub">Helmet, lock, and a little trail map come with every e-bike — that's just how we roll.</p>
 
-      {/* Bike Rental Section */}
+      {/* E-bike Rental Section */}
       <div className="sb-rates__section" style={{ marginBottom: '3rem' }}>
         <h3 className="sb-rates__group-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'inherit' }}>
-          Bike Rentals
+          E-bike Rentals
         </h3>
         <div className="sb-rates__grid">
           {bikeRates.map(renderCard)}
@@ -68,7 +68,7 @@ function Rates() {
       {/* Shuttle Service Section */}
       <div className="sb-rates__section">
         <h3 className="sb-rates__group-title" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'inherit' }}>
-          Shuttle Services
+          Shuttle Service
         </h3>
         <div className="sb-rates__grid">
           {shuttleRates.map(renderCard)}

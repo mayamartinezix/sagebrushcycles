@@ -7,9 +7,9 @@ function Hero({ onReserve }) {
         <img src={`${ASSETS}/sun.svg`} alt="" />
       </div>
       <p className="sb-hero__eyebrow">WE'RE WHEELY GLAD YOU'RE HERE</p>
-      <h1 className="sb-hero__title">Easygoing bike rentals,<br />right by the trail.</h1>
+      <h1 className="sb-hero__title">Easygoing e-bike rentals,<br />right by the trail.</h1>
       <p className="sb-hero__lead">
-        Grab a comfy bike for a half day or a full day and roll straight out onto
+        Grab a comfy e-bike for a half day or a full day and roll straight out onto
         the Weiser Trail. Two wheels, zero worries — just tell us when you'd like
         to ride and we'll have one ready to roll.
       </p>

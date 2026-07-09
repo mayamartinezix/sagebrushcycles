@@ -91,7 +91,7 @@ function RentalForm({ formRef }) {
 
     const body = new FormData();
     body.set('access_key', SPLITFORMS_KEY);
-    body.set('subject', `Bike rental request — ${data.name}`);
+    body.set('subject', `E-bike rental request — ${data.name}`);
     body.set('name', data.name);
     body.set('phone', data.phone);
     body.set('email', data.email);
@@ -140,7 +140,7 @@ function RentalForm({ formRef }) {
               </>
             )}
 
-            {' '}Estimated bike total <strong>${total}</strong>. We'll text you at{' '}
+            {' '}Estimated e-bike total <strong>${total}</strong>. We'll text you at{' '}
             <strong>{data.phone}</strong> and email <strong>{data.email}</strong> to confirm — usually within the hour.
           </p>
           <p className="sb-confirm__sign">Happy trails — wheel see you soon!</p>
@@ -155,7 +155,7 @@ function RentalForm({ formRef }) {
   return (
     <section className="sb-form-wrap" ref={formRef}>
       <div className="sb-form-card">
-        <h2 className="sb-section__title">Reserve a bike</h2>
+        <h2 className="sb-section__title">Reserve an e-bike</h2>
         <p className="sb-section__sub">
           Tell us a little about your ride and we'll get you set up. No payment now —
           this is just a request, no strings (or chains) attached.
