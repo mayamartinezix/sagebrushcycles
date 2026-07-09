@@ -20,13 +20,16 @@ function App() {
       window.location.hash = '';
       // The hashchange listener will set page to 'home' and scroll to top.
       // We need to wait for the next tick to scroll to the form.
-      setTimeout(() => {
+      const scroll = () => {
         const el = document.getElementById('reserve');
         if (el) {
           const top = el.getBoundingClientRect().top + window.scrollY - 16;
           window.scrollTo({ top, behavior: 'smooth' });
+        } else {
+          setTimeout(scroll, 50);
         }
-      }, 100);
+      };
+      setTimeout(scroll, 200);
       return;
     }
     const el = formRef.current;
@@ -43,7 +46,7 @@ function App() {
           <React.Fragment>
             <Hero onReserve={scrollToForm} />
             <Rates />
-            <div className="sb-reserve-anchor">
+            <div className="sb-reserve-anchor" id="reserve">
               <RentalForm formRef={formRef} />
             </div>
           </React.Fragment>

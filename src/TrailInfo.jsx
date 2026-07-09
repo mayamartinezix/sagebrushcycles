@@ -27,9 +27,9 @@ function TrailInfo({ onReserve }) {
             </div>
             <h3 className="sb-trail-card__title">The Cambridge Section</h3>
             <p className="sb-trail-card__text">
-              Cambridge serves as a vital midpoint on the trail. Heading south takes you through
-              the dramatic Weiser River Canyons toward Midvale, while heading north leads
-              upward into the lush forests and meadows near Council.
+              Find the trailhead across Railroad Street from the Washington County Fairgrounds, or
+              visit the informational kiosk where Highway 95 turns east. Cambridge offers a
+              rare one-mile paved stretch, perfect for a gentle start to your journey.
             </p>
           </div>
 
@@ -63,9 +63,9 @@ function TrailInfo({ onReserve }) {
             </div>
             <h3 className="sb-trail-card__title">Trail Tips</h3>
             <p className="sb-trail-card__text">
-              The trail is unpaved (primarily gravel and dirt) but well-maintained.
-              Our rental bikes are chosen specifically for these conditions to ensure
-              a smooth and comfortable journey.
+              Outside of the paved Cambridge mile, the trail is primarily gravel and dirt.
+              Our rental bikes are chosen specifically for these rail-trail conditions to
+              ensure a smooth and stable ride through the canyons and forests.
             </p>
           </div>
         </div>
