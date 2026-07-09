@@ -154,18 +154,6 @@ function RentalForm({ formRef }) {
 
   return (
     <section className="sb-form-wrap" ref={formRef}>
-      {/* INJECTED CSS FOR EVEN SPACING */}
-      <style>{`
-        .shuttle-segmented {
-          display: flex !important;
-          width: 100% !important;
-        }
-        .shuttle-segmented > * {
-          flex: 1 !important;
-          text-align: center;
-        }
-      `}</style>
-
       <div className="sb-form-card">
         <h2 className="sb-section__title">Reserve a bike</h2>
         <p className="sb-section__sub">
@@ -236,10 +224,9 @@ function RentalForm({ formRef }) {
           )}
 
           {/* Shuttle Toggle Options */}
-          <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
+          <div className="sb-form__plan">
             <span className="sb-field__label">Need a shuttle transport?</span>
             <Segmented
-              className="shuttle-segmented" /* <-- Added CSS Class hook */
               value={data.shuttleNeeded}
               onChange={set('shuttleNeeded')}
               options={[
@@ -251,10 +238,9 @@ function RentalForm({ formRef }) {
 
           {/* Conditional Sub-options for Custom vs Council */}
           {data.shuttleNeeded === 'yes' && (
-            <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
+            <div className="sb-form__plan">
               <span className="sb-field__label">Shuttle Option</span>
               <Segmented
-                className="shuttle-segmented" /* <-- Added CSS Class hook */
                 value={data.shuttleType}
                 onChange={set('shuttleType')}
                 options={[
@@ -265,7 +251,7 @@ function RentalForm({ formRef }) {
             </div>
           )}
 
-          <div className="sb-total" style={{ marginTop: '1.5rem' }}>
+          <div className="sb-total">
             <span className="sb-total__label">{totalLabel}</span>
             <span className="sb-total__amount">{total != null ? `$${total}` : 'Pick dates'}</span>
           </div>

@@ -14,11 +14,11 @@ function Hero({ onReserve }) {
         to ride and we'll have one ready to roll.
       </p>
       <div className="sb-hero__cta">
-        <div className="sb-hero__btns">
-          <Button variant="primary" onClick={onReserve}>Saddle up</Button>
-          <Button variant="secondary" onClick={() => { window.location.hash = 'trail'; }}>The Trail</Button>
-        </div>
-       
+        <Button variant="primary" onClick={onReserve}>Saddle up</Button>
+        <a className="sb-hero__link" href="tel:+12085499099" onClick={(e) => { e.preventDefault(); window.location.hash = 'trail'; }}>
+          <i data-lucide="map"></i> Or discover the trail
+        </a>
+      </div>
 
       <div className="sb-hero__photo">
         <span className="sb-hero__badge">Hop on!</span>
