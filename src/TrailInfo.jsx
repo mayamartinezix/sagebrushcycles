@@ -36,7 +36,7 @@ function TrailInfo({ onReserve }) {
 
           <div className="sb-trail-card">
             <div className="sb-trail-card__icon">
-              <i data-lucide="rail-symbol"></i>
+              <i data-lucide="train-track"></i>
             </div>
             <h3 className="sb-trail-card__title">Historic Trestles</h3>
             <p className="sb-trail-card__text">

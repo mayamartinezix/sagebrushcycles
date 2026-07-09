@@ -1,11 +1,10 @@
 /* global React, Header, Hero, Rates, RentalForm, Footer, TrailInfo */
-const { useRef, useEffect } = React;
 
 function App() {
-  const formRef = useRef(null);
+  const formRef = React.useRef(null);
   const [page, setPage] = React.useState(window.location.hash === '#trail' ? 'trail' : 'home');
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleHashChange = () => {
       setPage(window.location.hash === '#trail' ? 'trail' : 'home');
       window.scrollTo(0, 0);
@@ -14,7 +13,7 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+  React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
 
   const scrollToForm = () => {
     if (page !== 'home') {
@@ -44,7 +43,7 @@ function App() {
           <React.Fragment>
             <Hero onReserve={scrollToForm} />
             <Rates />
-            <div id="reserve">
+            <div className="sb-reserve-anchor">
               <RentalForm formRef={formRef} />
             </div>
           </React.Fragment>

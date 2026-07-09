@@ -5,7 +5,7 @@ function Footer() {
     <footer className="sb-footer">
       <img className="sb-footer__ridge" src={`${ASSETS}/ridge.svg`} alt="" aria-hidden="true" />
       <div className="sb-footer__inner">
-        <img className="sb-footer__mark" src={`${ASSETS}/emblem.svg`} alt="Sagebrush Cycle" />
+        <img className="sb-footer__mark" src={`${ASSETS}/sagebrush.svg`} alt="Sagebrush Cycle" />
         <div className="sb-footer__cols">
           <div className="sb-footer__col">
             <h4>Find us</h4>
