@@ -25,7 +25,8 @@ function RentalForm({ formRef }) {
     name: '', phone: '', email: '', plan: 'half',
     pday: '', ptime: '', dday: '', dtime: '',
     shuttleNeeded: 'no',      
-    shuttleType: 'council',   
+    shuttleType: 'council',
+    shuttleCustomRoute: '',
   });
   const [sent, setSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
@@ -79,9 +80,10 @@ function RentalForm({ formRef }) {
   }
 
   const baseOk = data.name.trim() && data.phone.trim() && data.email.trim() && data.pday && data.ptime;
+  const shuttleOk = data.shuttleNeeded !== 'yes' || data.shuttleType !== 'custom' || data.shuttleCustomRoute.trim();
   const canSend = data.plan === 'multi'
-    ? baseOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
-    : baseOk;
+    ? baseOk && shuttleOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
+    : baseOk && shuttleOk;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -101,7 +103,9 @@ function RentalForm({ formRef }) {
       ? `${prettyDay(data.dday)} at ${prettyTime(data.dtime)}`
       : `by ${dropBy}`);
     body.set('shuttle', data.shuttleNeeded === 'yes'
-      ? (data.shuttleType === 'council' ? 'Council-Cambridge shuttle' : 'Custom route shuttle')
+      ? (data.shuttleType === 'council'
+        ? 'Council-Cambridge shuttle'
+        : `Custom route: ${data.shuttleCustomRoute.trim()}`)
       : 'None');
     body.set('estimated_total', total != null ? `$${total}` : '—');
 
@@ -136,7 +140,11 @@ function RentalForm({ formRef }) {
             
             {data.shuttleNeeded === 'yes' && (
               <>
-                {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong> added to your request.
+                {' '}With <strong>{data.shuttleType === 'council' ? 'Council-Cambridge' : 'Custom'} shuttle service</strong>
+                {data.shuttleType === 'custom' && data.shuttleCustomRoute.trim()
+                  ? <> ({data.shuttleCustomRoute.trim()})</>
+                  : null}
+                {' '}added to your request.
               </>
             )}
 
@@ -251,10 +259,20 @@ function RentalForm({ formRef }) {
             </div>
           )}
 
-          <div className="sb-total" style={{ marginTop: '1.5rem' }}>
-            <span className="sb-total__label">{totalLabel}</span>
-            <span className="sb-total__amount">{total != null ? `$${total}` : 'Pick dates'}</span>
-          </div>
+          {data.shuttleNeeded === 'yes' && data.shuttleType === 'custom' && (
+            <label className="sb-field">
+              <span className="sb-field__label">Custom route details</span>
+              <textarea
+                className="sb-field__input sb-field__textarea"
+                name="shuttleCustomRoute"
+                value={data.shuttleCustomRoute}
+                onChange={(e) => set('shuttleCustomRoute')(e.target.value)}
+                placeholder="Where should we pick you up or drop you off?"
+                rows={3}
+              />
+              <span className="sb-field__hint">Tell us your preferred stop or route.</span>
+            </label>
+          )}
 
           <Button variant="primary" type="submit" full disabled={!canSend || sending}>
             {sending ? 'Sending…' : "Let's get rolling"}

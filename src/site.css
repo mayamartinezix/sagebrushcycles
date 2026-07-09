@@ -441,6 +441,12 @@ image-slot {
   transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
 }
 .sb-field__input::placeholder { color: var(--fg3); }
+textarea.sb-field__input,
+.sb-field__textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+  line-height: 1.45;
+}
 .sb-field__input:focus {
   outline: none;
   border-color: var(--sage-500);
