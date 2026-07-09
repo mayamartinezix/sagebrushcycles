@@ -8,7 +8,7 @@ function Header() {
           <img className="sb-brand__mark" src={`${ASSETS}/sagebrush%20logo.jpg`} alt="Sagebrush Cycle logo" />
           <span className="sb-brand__text">
             Sagebrush Cycles
-            <small>BIKE RENTALS · CAMBRIDGE </small>
+            <small>E-BIKE RENTALS · CAMBRIDGE </small>
           </span>
         </a>
       </div>

@@ -366,6 +366,9 @@ image-slot {
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
+.sb-rates__section:last-child .sb-rate {
+  grid-column: 1;
+}
 .sb-rate {
   position: relative;
   background: linear-gradient(180deg, rgba(255, 252, 245, 0.96), rgba(244, 236, 220, 0.92));
@@ -438,6 +441,12 @@ image-slot {
   transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
 }
 .sb-field__input::placeholder { color: var(--fg3); }
+textarea.sb-field__input,
+.sb-field__textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+  line-height: 1.45;
+}
 .sb-field__input:focus {
   outline: none;
   border-color: var(--sage-500);
@@ -736,11 +745,6 @@ image-slot {
   }
 
   .sb-rates__grid { grid-template-columns: 1fr 1fr; }
-  .sb-rates__section:last-child .sb-rates__grid {
-    grid-template-columns: 1fr;
-    max-width: 340px;
-    margin-inline: auto;
-  }
 
   .sb-form__row { grid-template-columns: 1fr 1fr; }
   .sb-form-card { padding: var(--space-6); }

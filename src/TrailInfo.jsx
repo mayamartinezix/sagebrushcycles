@@ -65,7 +65,7 @@ function TrailInfo({ onReserve }) {
             <h3 className="sb-trail-card__title">Trail Tips</h3>
             <p className="sb-trail-card__text">
               Outside of the paved Cambridge mile, the trail is primarily gravel and dirt.
-              Our rental bikes are chosen specifically for these rail-trail conditions to
+              Our rental e-bikes are chosen specifically for these rail-trail conditions to
               ensure a smooth and stable ride through the canyons and forests.
             </p>
           </div>
