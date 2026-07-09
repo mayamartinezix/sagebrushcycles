@@ -124,9 +124,9 @@ function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepM
 }
 
 /* ---------- Segmented (Half / Full day) ---------- */
-function Segmented({ options, value, onChange }) {
+function Segmented({ options, value, onChange, className }) {
   return (
-    <div className="sb-seg" role="tablist">
+    <div className={`sb-seg${className ? ` ${className}` : ''}`} role="tablist">
       {options.map((o) => (
         <button
           key={o.value}

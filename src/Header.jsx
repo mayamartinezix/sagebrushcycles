@@ -5,15 +5,12 @@ function Header() {
     <header className="sb-header">
       <div className="sb-header__left">
         <a className="sb-brand" href="#">
-          <img className="sb-brand__mark" src={`${ASSETS}/sagebrush.svg`} alt="Sagebrush Cycle logo" />
+          <img className="sb-brand__mark" src={`${ASSETS}/sagebrush%20logo.jpg`} alt="Sagebrush Cycle logo" />
           <span className="sb-brand__text">
             Sagebrush Cycles
             <small>BIKE RENTALS · CAMBRIDGE </small>
           </span>
         </a>
-        <nav className="sb-header__nav">
-          <a href="#trail" className="sb-header__link">The Trail</a>
-        </nav>
       </div>
       <a className="sb-header__phone" href="tel:+12085550148">
         <i data-lucide="phone"></i>

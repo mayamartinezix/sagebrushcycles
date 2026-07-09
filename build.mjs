@@ -103,7 +103,7 @@ export function build({ dev = false } = {}) {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Sagebrush Cycle — Bike rentals on the Weiser Trail</title>
   <meta name="description" content="Easygoing half- and full-day bike rentals right by the Weiser Trail. Reserve online or give us a call.">
   <link rel="icon" href="assets/emblem.svg" type="image/svg+xml">

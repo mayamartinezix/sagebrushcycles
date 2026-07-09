@@ -1,55 +1,41 @@
 /* ============================================================
    SAGEBRUSH CYCLE — Foundations
-   Bike rentals on the Weiser Trail. High-desert, cute & friendly.
-   Warm sand + sage green, soft rounded shapes, sunny clay accents.
+   Bike rentals on the Weiser Trail. Parchment, sage, worn ink.
+   Serif type + softly distressed surfaces.
    ============================================================ */
 
-/* ---------- Nunito Sans — self-hosted from uploaded variable fonts ---------- */
+/* ---------- Cormorant Garamond — display serif ---------- */
 @font-face {
-  font-family: 'Nunito Sans';
-  src: url('fonts/NunitoSans-VariableFont_YTLC_opsz_wdth_wght.woff2') format('woff2');
-  font-weight: 400 700; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Nunito Sans';
-  src: url('fonts/NunitoSans-Italic-VariableFont_YTLC_opsz_wdth_wght.woff2') format('woff2');
-  font-weight: 400 700; font-style: italic; font-display: swap;
+  font-family: 'Cormorant Garamond';
+  src: url('fonts/CormorantGaramond-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* ---------- Baloo 2 — self-hosted from uploaded files ---------- */
+/* ---------- Libre Baskerville — body serif ---------- */
 @font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-Regular.woff2') format('woff2');
-  font-weight: 400; font-style: normal; font-display: swap;
+  font-family: 'Libre Baskerville';
+  src: url('fonts/LibreBaskerville-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
 }
 @font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-Medium.woff2') format('woff2');
-  font-weight: 500; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-SemiBold.woff2') format('woff2');
-  font-weight: 600; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-Bold.woff2') format('woff2');
-  font-weight: 700; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-ExtraBold.woff2') format('woff2');
-  font-weight: 800; font-style: normal; font-display: swap;
+  font-family: 'Libre Baskerville';
+  src: url('fonts/LibreBaskerville-Italic-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
 }
 
 :root {
   /* ---------- BRAND PALETTE ---------- */
   /* Warm sands / paper */
-  --sand-50:  #FCF8F0;   /* lightest surface */
-  --sand-100: #F6EEE1;   /* page background */
-  --sand-200: #EEE2CD;   /* sunk surface / hairlines on sand */
-  --sand-300: #E2D0B3;   /* dune */
+  --sand-50:  #FAF4E8;
+  --sand-100: #EDE4D3;
+  --sand-200: #E0D2BC;
+  --sand-300: #CDBA9D;
 
   /* Sage greens (primary) */
   --sage-100: #E4EBD8;   /* soft tint / chips */
@@ -75,17 +61,17 @@
   --sun-500:  #E8B65A;
 
   /* Warm ink */
-  --ink:      #3A332A;   /* primary text */
-  --ink-soft: #6E6456;   /* secondary text */
-  --ink-faint:#9A8E7C;   /* tertiary / placeholder */
+  --ink:      #2F2820;
+  --ink-soft: #5E5346;
+  --ink-faint:#8A7C6C;
 
   /* ---------- SEMANTIC COLOR ---------- */
   --bg:            var(--sand-100);
   --bg-elevated:   var(--sand-50);
   --bg-sunk:       var(--sand-200);
-  --surface:       #FFFFFF;
-  --border:        #E3D6BF;
-  --border-strong: #D2C09F;
+  --surface:       #FAF6EE;
+  --border:        #C9B698;
+  --border-strong: #B39E7C;
 
   --fg1: var(--ink);        /* headings, primary copy */
   --fg2: var(--ink-soft);   /* supporting copy */
@@ -103,8 +89,8 @@
   --selection:  var(--sage-200);
 
   /* ---------- TYPE FAMILIES ---------- */
-  --font-display: 'Baloo 2', 'Trebuchet MS', sans-serif;
-  --font-body:    'Nunito Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body:    'Libre Baskerville', Georgia, 'Times New Roman', serif;
 
   /* ---------- TYPE SCALE (mobile-first, fluid) ---------- */
   --text-xs:   0.8125rem;  /* 13px */
@@ -120,8 +106,8 @@
   --leading-snug:  1.25;
   --leading-body:  1.55;
 
-  --tracking-tight: -0.02em;
-  --tracking-wide:  0.06em;
+  --tracking-tight: -0.01em;
+  --tracking-wide:  0.12em;
 
   /* ---------- SPACING (4px base) ---------- */
   --space-1: 4px;
@@ -135,17 +121,19 @@
   --space-9: 96px;
 
   /* ---------- RADII (soft & rounded) ---------- */
-  --radius-sm:   10px;
-  --radius-md:   16px;
-  --radius-lg:   24px;
-  --radius-xl:   34px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   24px;
   --radius-pill: 999px;
 
   /* ---------- SHADOWS (soft, warm-tinted) ---------- */
-  --shadow-sm: 0 1px 2px rgba(89, 66, 36, 0.08);
-  --shadow-md: 0 4px 14px rgba(89, 66, 36, 0.10);
-  --shadow-lg: 0 12px 32px rgba(89, 66, 36, 0.14);
-  --shadow-focus: 0 0 0 4px rgba(116, 139, 88, 0.30);
+  --shadow-sm: 0 1px 0 rgba(47, 40, 32, 0.08), 0 2px 8px rgba(47, 40, 32, 0.06);
+  --shadow-md: 0 1px 0 rgba(47, 40, 32, 0.1), 0 6px 18px rgba(47, 40, 32, 0.08);
+  --shadow-lg: 0 2px 0 rgba(47, 40, 32, 0.08), 0 14px 34px rgba(47, 40, 32, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(116, 139, 88, 0.22);
+  --ink-bleed: 0 1px 0 rgba(47, 40, 32, 0.12);
+  --paper-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 
   /* ---------- MOTION ---------- */
   --ease-soft: cubic-bezier(0.34, 1.2, 0.64, 1);   /* gentle overshoot */
@@ -161,7 +149,7 @@
    ============================================================ */
 .t-display {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: var(--text-4xl);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);

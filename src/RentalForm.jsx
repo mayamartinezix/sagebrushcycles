@@ -154,18 +154,6 @@ function RentalForm({ formRef }) {
 
   return (
     <section className="sb-form-wrap" ref={formRef}>
-      {/* INJECTED CSS FOR EVEN SPACING */}
-      <style>{`
-        .shuttle-segmented {
-          display: flex !important;
-          width: 100% !important;
-        }
-        .shuttle-segmented > * {
-          flex: 1 !important;
-          text-align: center;
-        }
-      `}</style>
-
       <div className="sb-form-card">
         <h2 className="sb-section__title">Reserve a bike</h2>
         <p className="sb-section__sub">
@@ -182,7 +170,7 @@ function RentalForm({ formRef }) {
             hint="We'll text you here to confirm." />
 
           <Field label="Email address" name="email" type="email" inputMode="email"
-            value={data.email} onChange={set('email')} placeholder="you@example.com"
+            value={data.email} onChange={set('email')} placeholder="letsride@sagebrushcycles.com"
             hint="We'll send your receipt here." />
 
           <div className="sb-form__plan">
@@ -239,13 +227,12 @@ function RentalForm({ formRef }) {
           <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
             <span className="sb-field__label">Need a shuttle transport?</span>
             <Segmented
-              className="shuttle-segmented" /* <-- Added CSS Class hook */
               value={data.shuttleNeeded}
               onChange={set('shuttleNeeded')}
-              options={[
-                { value: 'no', label: 'No shuttle', sub: 'Self pick up/drop off' },
-                { value: 'yes', label: 'Yes, please', sub: 'Add shuttle service' },
-              ]}
+                options={[
+                  { value: 'no', label: 'No shuttle', sub: 'Self pickup' },
+                  { value: 'yes', label: 'Yes, please', sub: 'Add service' },
+                ]}
             />
           </div>
 
@@ -254,12 +241,11 @@ function RentalForm({ formRef }) {
             <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
               <span className="sb-field__label">Shuttle Option</span>
               <Segmented
-                className="shuttle-segmented" /* <-- Added CSS Class hook */
                 value={data.shuttleType}
                 onChange={set('shuttleType')}
                 options={[
-                  { value: 'council', label: 'Council-Cambridge', sub: 'Standard local routes' },
-                  { value: 'custom', label: 'Custom Route', sub: 'Coordinate custom stop' },
+                  { value: 'council', label: 'Local route', sub: 'Council–Cambridge' },
+                  { value: 'custom', label: 'Custom route', sub: 'Pick your stop' },
                 ]}
               />
             </div>
