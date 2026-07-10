@@ -18,14 +18,6 @@ const RATES = [
     desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
   },
   {
-    icon: 'sun',
-    name: 'Multi-day (2–7 days)',
-    price: '$50',
-    unit: 'per day of ex-cycling fun',
-    desc: 'Shift things into high gear.',
-    tag: 'The Wheel Deal',
-  },
-  {
     icon: 'car',
     name: 'Shuttle Service',
     price: '$25 + milage cost',
@@ -36,7 +28,7 @@ const RATES = [
 
 function Rates() {
   // Dynamically split the rates array based on functionality
-  const bikeRates = RATES.filter(r => r.icon === 'bike' || r.icon === 'sun');
+  const bikeRates = RATES.filter(r => r.icon === 'bike');
   const shuttleRates = RATES.filter(r => r.icon === 'car' || r.icon === 'CutePhone');
 
   // Helper function to render an individual rate card to keep code DRY

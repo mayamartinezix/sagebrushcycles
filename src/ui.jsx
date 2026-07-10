@@ -66,7 +66,7 @@ function fmtDaySlot(iso) {
   const d = new Date(iso + 'T00:00');
   return {
     wd: d.toLocaleDateString(undefined, { weekday: 'short' }),
-    md: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    md: String(d.getDate()),
   };
 }
 

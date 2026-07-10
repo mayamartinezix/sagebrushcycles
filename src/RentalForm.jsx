@@ -4,10 +4,7 @@
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
 const HALF_LENGTH = 5 * 60;    // a half day is 5 hours
-const RETURN_AM   = 10 * 60;   // full & multi-day bikes are due back by 10:00am
-const PRICE = { half: 45, full: 65, multiDay: 50 };  // multiDay is per day
-const MULTI_MIN_DAYS = 2;
-const MULTI_MAX_DAYS = 7;
+const PRICE = { half: 45, full: 65 };
 
 /* splitforms form-to-email backend. The access key is substituted at build
    time (esbuild define in build.mjs) so each deployment — staging, production,
@@ -20,11 +17,10 @@ const SPLITFORMS_KEY = __SPLITFORMS_KEY__;
 const HALF_LAST_PICKUP = SHOP_CLOSE - HALF_LENGTH;
 
 function RentalForm({ formRef }) {
-  // FIXED: Using React.useState directly to avoid ReferenceErrors
   const [data, setData] = React.useState({
     name: '', phone: '', email: '', plan: 'half',
-    pday: '', ptime: '', dday: '', dtime: '',
-    shuttleNeeded: 'no',      
+    pday: '', ptime: '',
+    shuttleNeeded: 'no',
     shuttleType: 'council',
     shuttleCustomRoute: '',
   });
@@ -35,7 +31,6 @@ function RentalForm({ formRef }) {
 
   const today = isoToday();
 
-  // switching length: drop a pickup time that no longer fits the new length
   const choosePlan = (plan) => setData((d) => {
     const next = { ...d, plan };
     const pmax = plan === 'half' ? HALF_LAST_PICKUP : SHOP_CLOSE;
@@ -43,47 +38,24 @@ function RentalForm({ formRef }) {
     return next;
   });
 
-  // changing pickup day: clear a multi-day drop-off that falls outside the window
-  const choosePday = (v) => setData((d) => {
-    const next = { ...d, pday: v };
-    if (d.plan === 'multi' && d.dday) {
-      const lo = addDays(v, MULTI_MIN_DAYS - 1);
-      const hi = addDays(v, MULTI_MAX_DAYS - 1);
-      if (d.dday < lo || d.dday > hi) next.dday = '';
-    }
-    return next;
-  });
-
   const pickupMax = data.plan === 'half' ? HALF_LAST_PICKUP : SHOP_CLOSE;
 
-  // ----- derived: days, total, drop-off -----
-  const days = (data.plan === 'multi' && data.pday && data.dday)
-    ? daysInclusive(data.pday, data.dday) : 0;
-
-  const total =
-    data.plan === 'half' ? PRICE.half :
-    data.plan === 'full' ? PRICE.full :
-    days ? days * PRICE.multiDay : null;
+  const total = data.plan === 'half' ? PRICE.half : PRICE.full;
 
   const totalLabel =
-    data.plan === 'half' ? 'Half day · 5 hours' :
-    data.plan === 'full' ? 'Full day · All day' :
-    days ? `${days} days · $${PRICE.multiDay}/day` : `Multi-day · $${PRICE.multiDay}/day`;
+    data.plan === 'half' ? 'Half day · 5 hours' : 'Full day · All day';
 
-  // static "drop off by" line for half / full
   let dropBy = '';
   if (data.plan === 'half' && data.ptime) {
     const m = toMin(data.ptime) + HALF_LENGTH;
     dropBy = `${fmtMin(m)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`;
   } else if (data.plan === 'full') {
-    dropBy = `${fmtMin(SHOP_CLOSE)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`; // FIXED: Improved UX string
+    dropBy = `${fmtMin(SHOP_CLOSE)}${data.pday ? ` · ${dowMonDay(data.pday)}` : ''} (same day)`;
   }
 
   const baseOk = data.name.trim() && data.phone.trim() && data.email.trim() && data.pday && data.ptime;
   const shuttleOk = data.shuttleNeeded !== 'yes' || data.shuttleType !== 'custom' || data.shuttleCustomRoute.trim();
-  const canSend = data.plan === 'multi'
-    ? baseOk && shuttleOk && data.dday && data.dtime && days >= MULTI_MIN_DAYS && days <= MULTI_MAX_DAYS
-    : baseOk && shuttleOk;
+  const canSend = baseOk && shuttleOk;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -99,15 +71,13 @@ function RentalForm({ formRef }) {
     body.set('email', data.email);
     body.set('rental', totalLabel);
     body.set('pickup', `${prettyDay(data.pday)} at ${prettyTime(data.ptime)}`);
-    body.set('dropoff', data.plan === 'multi'
-      ? `${prettyDay(data.dday)} at ${prettyTime(data.dtime)}`
-      : `by ${dropBy}`);
+    body.set('dropoff', `by ${dropBy}`);
     body.set('shuttle', data.shuttleNeeded === 'yes'
       ? (data.shuttleType === 'council'
         ? 'Council-Cambridge shuttle'
         : `Custom route: ${data.shuttleCustomRoute.trim()}`)
       : 'None');
-    body.set('estimated_total', total != null ? `$${total}` : '—');
+    body.set('estimated_total', `$${total}`);
 
     try {
       const res = await fetch(SPLITFORMS_ENDPOINT, {
@@ -125,7 +95,7 @@ function RentalForm({ formRef }) {
   }
 
   if (sent) {
-    const planWord = data.plan === 'half' ? 'half-day' : data.plan === 'full' ? 'full-day' : `${days}-day`;
+    const planWord = data.plan === 'half' ? 'half-day' : 'full-day';
     return (
       <section className="sb-form-wrap" ref={formRef}>
         <div className="sb-confirm">
@@ -134,9 +104,7 @@ function RentalForm({ formRef }) {
           <p className="sb-confirm__body">
             We've got your request for a <strong>{planWord}</strong> rental starting{' '}
             <strong>{prettyDay(data.pday)}</strong> at <strong>{prettyTime(data.ptime)}</strong>
-            {data.plan === 'multi'
-              ? <React.Fragment>, back by <strong>{prettyTime(data.dtime)}</strong> on <strong>{prettyDay(data.dday)}</strong></React.Fragment>
-              : <React.Fragment>, due back <strong>{dropBy.replace(/ \(.*\)$/, '')}</strong></React.Fragment>}.
+            , due back <strong>{dropBy.replace(/ \(.*\)$/, '')}</strong>.
             
             {data.shuttleNeeded === 'yes' && (
               <>
@@ -187,51 +155,31 @@ function RentalForm({ formRef }) {
               value={data.plan}
               onChange={choosePlan}
               options={[
-                { value: 'half',  label: 'Half day',  sub: '4 hrs · $45' },
-                { value: 'full',  label: 'Full day',  sub: 'all day · $65' },
-                { value: 'multi', label: 'Multi-day', sub: '$50 / day' },
+                { value: 'half', label: 'Half day', sub: '4 hrs · $45' },
+                { value: 'full', label: 'Full day', sub: 'all day · $65' },
               ]}
             />
           </div>
 
           <div className="sb-form__leg">
-            <span className="sb-leg__label">
-              {data.plan === 'multi' ? 'Pick up' : 'When would you like it?'}
-            </span>
+            <span className="sb-leg__label">When would you like it?</span>
             <div className="sb-form__row">
               <DatePicker label="Day" min={today}
-                value={data.pday} onChange={choosePday} />
+                value={data.pday} onChange={set('pday')} />
               <TimePicker label="Time" value={data.ptime} onChange={set('ptime')}
                 minMinutes={SHOP_OPEN} maxMinutes={pickupMax} />
             </div>
           </div>
 
-          {data.plan === 'multi' ? (
-            <div className="sb-form__leg sb-form__leg--drop">
-              <span className="sb-leg__label">Drop off</span>
-              <div className="sb-form__row">
-                <DatePicker label="Day"
-                  min={data.pday ? addDays(data.pday, MULTI_MIN_DAYS - 1) : today}
-                  max={data.pday ? addDays(data.pday, MULTI_MAX_DAYS - 1) : undefined}
-                  disabled={!data.pday}
-                  value={data.dday} onChange={set('dday')} />
-                <TimePicker label="Time" value={data.dtime} onChange={set('dtime')}
-                  minMinutes={SHOP_OPEN} maxMinutes={SHOP_CLOSE} />
-              </div>
-              {!data.pday && <span className="sb-field__hint">Pick a pick-up day first.</span>}
-            </div>
-          ) : (
-            <div className="sb-dropby">
-              <svg className="sb-dropby__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 7.5V12l3 2"></path>
-              </svg>
-              <span>Drop off by <strong>{dropBy || '—'}</strong></span>
-            </div>
-          )}
+          <div className="sb-dropby">
+            <svg className="sb-dropby__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7.5V12l3 2"></path>
+            </svg>
+            <span>Drop off by <strong>{dropBy || '—'}</strong></span>
+          </div>
 
-          {/* Shuttle Toggle Options */}
           <div className="sb-form__plan" style={{ marginTop: '1.5rem' }}>
             <span className="sb-field__label">Need a shuttle transport?</span>
             <Segmented
@@ -244,7 +192,6 @@ function RentalForm({ formRef }) {
             />
           </div>
 
-          {/* Conditional Sub-options for Custom vs Council */}
           {data.shuttleNeeded === 'yes' && (
             <div className="sb-form__plan" style={{ marginTop: '1rem' }}>
               <span className="sb-field__label">Shuttle Option</span>
@@ -295,10 +242,10 @@ function RentalForm({ formRef }) {
 }
 
 /* ---------- helpers ---------- */
-function toMin(t) { 
+function toMin(t) {
   if (!t || typeof t !== 'string' || !t.includes(':')) return SHOP_OPEN;
-  const [h, m] = t.split(':').map(Number); 
-  return h * 60 + m; 
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
 }
 
 function fmtMin(min) {
@@ -309,15 +256,6 @@ function fmtMin(min) {
 function isoToday() {
   const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(0, 10);
-}
-function addDays(iso, n) {
-  const d = new Date(iso + 'T00:00'); d.setDate(d.getDate() + n);
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 10);
-}
-function daysInclusive(a, b) {
-  const ms = new Date(b + 'T00:00') - new Date(a + 'T00:00');
-  return Math.round(ms / 86400000) + 1;
 }
 function dowMonDay(iso) {
   return new Date(iso + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
