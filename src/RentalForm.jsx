@@ -1,4 +1,4 @@
-/* global React, Button, Field, Segmented, TimePicker, ASSETS, __SPLITFORMS_KEY__ */
+/* global React, Button, Field, Segmented, DatePicker, TimePicker, ASSETS, __SPLITFORMS_KEY__ */
 
 
 const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
@@ -199,7 +199,7 @@ function RentalForm({ formRef }) {
               {data.plan === 'multi' ? 'Pick up' : 'When would you like it?'}
             </span>
             <div className="sb-form__row">
-              <Field label="Day" name="pday" type="date" min={today}
+              <DatePicker label="Day" min={today}
                 value={data.pday} onChange={choosePday} />
               <TimePicker label="Time" value={data.ptime} onChange={set('ptime')}
                 minMinutes={SHOP_OPEN} maxMinutes={pickupMax} />
@@ -210,7 +210,7 @@ function RentalForm({ formRef }) {
             <div className="sb-form__leg sb-form__leg--drop">
               <span className="sb-leg__label">Drop off</span>
               <div className="sb-form__row">
-                <Field label="Day" name="dday" type="date"
+                <DatePicker label="Day"
                   min={data.pday ? addDays(data.pday, MULTI_MIN_DAYS - 1) : today}
                   max={data.pday ? addDays(data.pday, MULTI_MAX_DAYS - 1) : undefined}
                   disabled={!data.pday}

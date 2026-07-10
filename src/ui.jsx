@@ -41,6 +41,57 @@ function Field({ label, optional, hint, type = 'text', value, onChange, placehol
   );
 }
 
+/* ---------- Date picker (matches time picker trigger style) ---------- */
+function fmtDate(iso) {
+  if (!iso) return '';
+  return new Date(iso + 'T00:00').toLocaleDateString(undefined, {
+    weekday: 'short', month: 'short', day: 'numeric',
+  });
+}
+
+function DatePicker({ label, value, onChange, min, max, disabled }) {
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (window.lucide) window.lucide.createIcons();
+  }, [value, disabled]);
+
+  const open = () => {
+    if (disabled) return;
+    const el = inputRef.current;
+    if (!el) return;
+    if (typeof el.showPicker === 'function') el.showPicker();
+    else el.click();
+  };
+
+  return (
+    <div className={`sb-field sb-dp${disabled ? ' is-disabled' : ''}`}>
+      <span className="sb-field__label">{label}</span>
+      <button
+        type="button"
+        className={`sb-field__input sb-picker__trigger${value ? '' : ' is-empty'}`}
+        disabled={disabled}
+        onClick={open}
+      >
+        <span>{value ? fmtDate(value) : 'Pick a day'}</span>
+        <i data-lucide="calendar"></i>
+      </button>
+      <input
+        ref={inputRef}
+        type="date"
+        className="sb-dp__native"
+        value={value}
+        min={min}
+        max={max}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
+
 /* ---------- Time picker (tap-to-pick, half-hour slots) ---------- */
 function fmtMins(mins) {
   const h = Math.floor(mins / 60);
@@ -83,7 +134,7 @@ function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepM
       <span className="sb-field__label">{label}</span>
       <button
         type="button"
-        className={`sb-field__input sb-tp__trigger${value ? '' : ' is-empty'}`}
+        className={`sb-field__input sb-picker__trigger${value ? '' : ' is-empty'}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
@@ -144,4 +195,4 @@ function Segmented({ options, value, onChange, className }) {
   );
 }
 
-Object.assign(window, { Button, Field, Segmented, TimePicker, ASSETS });
+Object.assign(window, { Button, Field, Segmented, DatePicker, TimePicker, ASSETS });
