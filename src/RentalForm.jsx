@@ -178,7 +178,7 @@ function RentalForm({ formRef }) {
             hint="We'll text you here to confirm." />
 
           <Field label="Email address" name="email" type="email" inputMode="email"
-            value={data.email} onChange={set('email')} placeholder="letsride@sagebrushcycles.com"
+            value={data.email} onChange={set('email')} placeholder="letsride@sagebrush-cycles.com"
             hint="We'll send your receipt here." />
 
           <div className="sb-form__plan">
