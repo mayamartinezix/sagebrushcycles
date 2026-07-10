@@ -41,6 +41,114 @@ function Field({ label, optional, hint, type = 'text', value, onChange, placehol
   );
 }
 
+/* ---------- Date picker (custom popup, matches time picker) ---------- */
+function isoToday() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+
+function addDaysIso(iso, n) {
+  const d = new Date(iso + 'T00:00');
+  d.setDate(d.getDate() + n);
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  return new Date(iso + 'T00:00').toLocaleDateString(undefined, {
+    weekday: 'short', month: 'short', day: 'numeric',
+  });
+}
+
+function fmtDaySlot(iso) {
+  const d = new Date(iso + 'T00:00');
+  return {
+    wd: d.toLocaleDateString(undefined, { weekday: 'short' }),
+    md: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+  };
+}
+
+function buildDateGroups(min, max) {
+  const dates = [];
+  let cur = min;
+  while (cur <= max) {
+    dates.push(cur);
+    cur = addDaysIso(cur, 1);
+  }
+  const byMonth = new Map();
+  for (const iso of dates) {
+    const name = new Date(iso + 'T00:00').toLocaleDateString(undefined, {
+      month: 'long', year: 'numeric',
+    });
+    if (!byMonth.has(name)) byMonth.set(name, []);
+    byMonth.get(name).push(iso);
+  }
+  return [...byMonth.entries()].map(([name, slots]) => ({ name, slots }));
+}
+
+function DatePicker({ label, value, onChange, min, max, disabled }) {
+  const [open, setOpen] = React.useState(false);
+  const minDate = min || isoToday();
+  const maxDate = max || addDaysIso(minDate, 89);
+  const groups = buildDateGroups(minDate, maxDate);
+  const noDates = !groups.length || groups.every((g) => !g.slots.length);
+
+  React.useEffect(() => {
+    if (open && window.lucide) window.lucide.createIcons();
+  }, [open, value, minDate, maxDate]);
+
+  return (
+    <div className={`sb-field sb-dp${disabled ? ' is-disabled' : ''}`}>
+      <span className="sb-field__label">{label}</span>
+      <button
+        type="button"
+        className={`sb-field__input sb-picker__trigger${value ? '' : ' is-empty'}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={disabled}
+        onClick={() => !disabled && setOpen((o) => !o)}
+      >
+        <span>{value ? fmtDate(value) : 'Pick a day'}</span>
+        <i data-lucide="calendar"></i>
+      </button>
+
+      {open && (
+        <React.Fragment>
+          <div className="sb-tp__backdrop" onClick={() => setOpen(false)}></div>
+          <div className="sb-tp__pop sb-dp__pop" role="listbox">
+            {noDates && <p className="sb-tp__empty">No dates available — try another length.</p>}
+            {groups.map((g) => (
+              <div className="sb-tp__group" key={g.name}>
+                <span className="sb-tp__glabel">{g.name}</span>
+                <div className="sb-tp__grid sb-dp__grid">
+                  {g.slots.map((iso) => {
+                    const { wd, md } = fmtDaySlot(iso);
+                    return (
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={value === iso}
+                        key={iso}
+                        className={`sb-tp__slot sb-dp__slot${value === iso ? ' is-on' : ''}`}
+                        onClick={() => { onChange(iso); setOpen(false); }}
+                      >
+                        <span className="sb-dp__slot-wd">{wd}</span>
+                        <span className="sb-dp__slot-md">{md}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </React.Fragment>
+      )}
+    </div>
+  );
+}
+
 /* ---------- Time picker (tap-to-pick, half-hour slots) ---------- */
 function fmtMins(mins) {
   const h = Math.floor(mins / 60);
@@ -83,7 +191,7 @@ function TimePicker({ label, value, onChange, startHour = 8, endHour = 18, stepM
       <span className="sb-field__label">{label}</span>
       <button
         type="button"
-        className={`sb-field__input sb-tp__trigger${value ? '' : ' is-empty'}`}
+        className={`sb-field__input sb-picker__trigger${value ? '' : ' is-empty'}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
@@ -144,4 +252,4 @@ function Segmented({ options, value, onChange, className }) {
   );
 }
 
-Object.assign(window, { Button, Field, Segmented, TimePicker, ASSETS });
+Object.assign(window, { Button, Field, Segmented, DatePicker, TimePicker, ASSETS });
