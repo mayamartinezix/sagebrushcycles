@@ -283,7 +283,7 @@ function RentalForm({ formRef }) {
             </p>
           )}
           <p className="sb-form__fineprint">
-            Helmet &amp; lock included. Must be 18+ to reserve; kids ride with a parent.
+            Helmet &amp; lock included. Must be 18+ to reserve a bike.
           </p>
           <p className="sb-form__credit">
             Form powered by <a href="https://splitforms.com" target="_blank" rel="noopener">splitforms</a>
