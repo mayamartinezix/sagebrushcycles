@@ -15,7 +15,7 @@ const RATES = [
     name: 'Full-day',
     price: '$65',
     unit: 'all day, your pace',
-    desc: 'Ride the whole trail and stop wherever looks good. Go on, gear out.',
+    desc: 'Ride the whole day and stop wherever looks good. Go on, gear out.',
   },
   {
     icon: 'sun',
@@ -28,7 +28,7 @@ const RATES = [
   {
     icon: 'car',
     name: 'Shuttle Service',
-    price: '$25 + milage cost',
+    price: '$25 + mileage cost',
     desc: 'We go the extra mile.',
   },
   
