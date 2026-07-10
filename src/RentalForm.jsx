@@ -5,7 +5,7 @@ const SHOP_OPEN   = 8 * 60;    // shop opens 8:00am
 const SHOP_CLOSE  = 18 * 60;   // shop closes 6:00pm
 const HALF_LENGTH = 5 * 60;    // a half day is 5 hours
 const RETURN_AM   = 10 * 60;   // full & multi-day bikes are due back by 10:00am
-const PRICE = { half: 30, full: 45, multiDay: 40 };  // multiDay is per day
+const PRICE = { half: 45, full: 65, multiDay: 50 };  // multiDay is per day
 const MULTI_MIN_DAYS = 2;
 const MULTI_MAX_DAYS = 7;
 
@@ -187,9 +187,9 @@ function RentalForm({ formRef }) {
               value={data.plan}
               onChange={choosePlan}
               options={[
-                { value: 'half',  label: 'Half day',  sub: '4 hrs · $30' },
-                { value: 'full',  label: 'Full day',  sub: 'all day · $45' },
-                { value: 'multi', label: 'Multi-day', sub: '$40 / day' },
+                { value: 'half',  label: 'Half day',  sub: '4 hrs · $45' },
+                { value: 'full',  label: 'Full day',  sub: 'all day · $65' },
+                { value: 'multi', label: 'Multi-day', sub: '$50 / day' },
               ]}
             />
           </div>
