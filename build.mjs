@@ -41,7 +41,7 @@ const STYLES = ["colors_and_type.css", "site.css"];
 // design — it only identifies which form receives submissions). Set the
 // SPLITFORMS_KEY env var to point a build at a different form — production,
 // a per-developer test form, etc. Unset/empty falls back to the staging key.
-const SPLITFORMS_KEY_DEFAULT = "45cc8be1f63e46f6a137f285544ad933";
+const SPLITFORMS_KEY_DEFAULT = "67e0fc3b0d694acca8f2587330d4e61e";
 
 function read(p) {
   return fs.readFileSync(p, "utf8");

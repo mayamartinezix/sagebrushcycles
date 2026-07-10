@@ -201,7 +201,7 @@ function RentalForm({ formRef }) {
             <div className="sb-form__row">
               <Field label="Day" name="pday" type="date" min={today}
                 value={data.pday} onChange={choosePday} />
-              <TimePicker label="Time" value={data.ptime || "08:00"} onChange={set('ptime')}
+              <TimePicker label="Time" value={data.ptime} onChange={set('ptime')}
                 minMinutes={SHOP_OPEN} maxMinutes={pickupMax} />
             </div>
           </div>
@@ -215,7 +215,7 @@ function RentalForm({ formRef }) {
                   max={data.pday ? addDays(data.pday, MULTI_MAX_DAYS - 1) : undefined}
                   disabled={!data.pday}
                   value={data.dday} onChange={set('dday')} />
-                <TimePicker label="Time" value={data.dtime || "10:00"} onChange={set('dtime')}
+                <TimePicker label="Time" value={data.dtime} onChange={set('dtime')}
                   minMinutes={SHOP_OPEN} maxMinutes={SHOP_CLOSE} />
               </div>
               {!data.pday && <span className="sb-field__hint">Pick a pick-up day first.</span>}
