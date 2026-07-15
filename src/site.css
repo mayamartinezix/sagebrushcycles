@@ -168,7 +168,7 @@ image-slot {
 }
 .sb-header__link:hover { color: var(--sage-700); text-decoration: underline; }
 .sb-brand { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; }
-.sb-brand__mark { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.sb-brand__mark { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
 .sb-brand__text {
   font-family: var(--font-display);
   font-weight: 700;
@@ -662,7 +662,7 @@ textarea.sb-field__input,
   padding: var(--space-7) var(--space-5) var(--space-6);
   text-align: center;
 }
-.sb-footer__mark { width: 64px; height: 64px; border-radius: 50%; margin-bottom: var(--space-4); filter: drop-shadow(0 4px 10px rgba(0,0,0,.2)); object-fit: cover; }
+.sb-footer__mark { width: 84px; height: 84px; border-radius: 50%; margin-bottom: var(--space-4); filter: drop-shadow(0 4px 10px rgba(0,0,0,.2)); object-fit: cover; }
 .sb-footer__cols {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -900,9 +900,10 @@ textarea.sb-field__input,
   }
   .sb-header__phone {
     margin-left: auto;
-    padding: 10px 12px;
-    font-size: 12px;
+    padding: 11px 14px;
+    font-size: 16px;
   }
+  .sb-header__phone i { width: 18px; height: 18px; }
 
   .sb-rates__grid { grid-template-columns: 1fr; }
   .sb-form__row { grid-template-columns: 1fr; }
@@ -984,5 +985,5 @@ textarea.sb-field__input,
 
 @media (max-width: 420px) {
   .sb-footer__cols { grid-template-columns: 1fr; }
-  .sb-header__phone span { font-size: 11px; }
+  .sb-header__phone span { font-size: 15px; }
 }
